@@ -1,0 +1,3 @@
+[submodule "ncnn-python-gpu"]
+	path = ncnn-python-gpu
+	url = https://github.com/Hideousmon/ncnn.git
