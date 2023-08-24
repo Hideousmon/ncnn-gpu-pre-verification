@@ -79,12 +79,10 @@ jobs:
           cd ../share
           ls
           echo ''
-          cd ../lib
+          cd ./vulkan
           ls
           echo ''
-          cd ../pkgconfig
-          ls
-          echo ''
+ 
 
 
           
