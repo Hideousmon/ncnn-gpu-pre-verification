@@ -73,15 +73,11 @@ jobs:
           cd VULKAN_SDK
           ls
           echo ''
-          cd include 
+          cd sdk.env 
           ls
           echo ''
-          cd ../share
-          ls
-          echo ''
-          cd ./vulkan
-          ls
-          echo ''
+
+  
  
 
 
