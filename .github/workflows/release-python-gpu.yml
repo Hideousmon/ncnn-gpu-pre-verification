@@ -16,19 +16,19 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
-          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
-          - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
-          - { os: windows-2019, arch: x86,        build: 'cp*'            }
-          - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
-          - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
-          - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
-          - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          - { os: macos-latest, arch: arm64,      build: 'cp*'            }
-          - { os: macos-latest, arch: universal2, build: 'cp*'            }
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
+          # - { os: windows-2019, arch: x86,        build: 'cp*'            }
+          # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
+          # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
+          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
+          # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
+          # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
+          # - { os: macos-latest, arch: arm64,      build: 'cp*'            }
+          # - { os: macos-latest, arch: universal2, build: 'cp*'            }
 
     steps:
       - uses: actions/checkout@v3
@@ -60,21 +60,34 @@ jobs:
         run: |
           brew uninstall --ignore-dependencies libomp
 
-      - name: Prepare Vulkan SDK
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
+      - name: cache-swiftshader
+        id: cache-swiftshader
+        uses: actions/cache@v3
         with:
-          vulkan-query-version: 1.3.204.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          vulkan-use-cache: true
-
-      - name: Test Vulkan SDK Install
-        shell: bash
+          path: swiftshader-install
+          key: swiftshader-linux-install-20230420
+      - name: checkout-swiftshader
+        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
+        uses: actions/checkout@v3
+        with:
+          repository: google/swiftshader
+          path: swiftshader
+          ref: dd55e592406dc0bae219df11adec6363840aff4a
+      - name: checkout-swiftshader-submodules
+        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
         run: |
-          echo "Vulkan SDK Version=='$VULKAN_SDK_VERSION'"
-          echo "VULKAN_SDK=='$VULKAN_SDK'"
-          echo "Vulkan_LIBRARY=='$VULKAN_SDK/lib'"
-          echo "Vulkan_INCLUDE_DIR=='$VULKAN_SDK/include'"
-
+          cd swiftshader
+          git -c submodule."third_party/git-hooks".update=none submodule update --init --recursive
+      - name: swiftshader
+        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
+        run: |
+          cd swiftshader
+          mkdir -p build; cd build
+          cmake -DCMAKE_INSTALL_PREFIX=install -DSWIFTSHADER_BUILD_EGL=FALSE -DSWIFTSHADER_BUILD_GLESv2=FALSE -DSWIFTSHADER_BUILD_GLES_CM=FALSE -DSWIFTSHADER_BUILD_VULKAN=TRUE -DSWIFTSHADER_BUILD_PVR=FALSE -DSWIFTSHADER_BUILD_TESTS=FALSE -DSWIFTSHADER_ENABLE_ASTC=FALSE -DSWIFTSHADER_WARNINGS_AS_ERRORS=FALSE -DREACTOR_BACKEND=Subzero -DREACTOR_DEFAULT_OPT_LEVEL=Default -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build . -j 4
+          mkdir $GITHUB_WORKSPACE/swiftshader-install
+          cp Linux/* $GITHUB_WORKSPACE/swiftshader-install
+          
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
         env:
@@ -83,7 +96,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' VULKAN_SDK=='$VULKAN_SDK' Vulkan_LIBRARY=='$VULKAN_SDK/lib' Vulkan_INCLUDE_DIR=='$VULKAN_SDK/include'
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
