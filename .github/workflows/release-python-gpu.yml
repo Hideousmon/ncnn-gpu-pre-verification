@@ -59,34 +59,13 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew uninstall --ignore-dependencies libomp
-
-      - name: cache-swiftshader
-        id: cache-swiftshader
-        uses: actions/cache@v3
-        with:
-          path: swiftshader-install
-          key: swiftshader-linux-install-20230420
-      - name: checkout-swiftshader
-        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
-        uses: actions/checkout@v3
-        with:
-          repository: google/swiftshader
-          path: swiftshader
-          ref: dd55e592406dc0bae219df11adec6363840aff4a
-      - name: checkout-swiftshader-submodules
-        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
+      
+      # install deps on ubuntu-20.04
+      - name: install deps
+        if: matrix.os == 'ubuntu-20.04'
         run: |
-          cd swiftshader
-          git -c submodule."third_party/git-hooks".update=none submodule update --init --recursive
-      - name: swiftshader
-        if: steps.cache-swiftshader.outputs.cache-hit != 'true'
-        run: |
-          cd swiftshader
-          mkdir -p build; cd build
-          cmake -DCMAKE_INSTALL_PREFIX=install -DSWIFTSHADER_BUILD_EGL=FALSE -DSWIFTSHADER_BUILD_GLESv2=FALSE -DSWIFTSHADER_BUILD_GLES_CM=FALSE -DSWIFTSHADER_BUILD_VULKAN=TRUE -DSWIFTSHADER_BUILD_PVR=FALSE -DSWIFTSHADER_BUILD_TESTS=FALSE -DSWIFTSHADER_ENABLE_ASTC=FALSE -DSWIFTSHADER_WARNINGS_AS_ERRORS=FALSE -DREACTOR_BACKEND=Subzero -DREACTOR_DEFAULT_OPT_LEVEL=Default -DCMAKE_BUILD_TYPE=Release ..
-          cmake --build . -j 4
-          mkdir $GITHUB_WORKSPACE/swiftshader-install
-          cp Linux/* $GITHUB_WORKSPACE/swiftshader-install
+          sudo apt-get update
+          sudo apt-get install libprotobuf-dev protobuf-compiler libopencv-dev libvulkan-dev glslang-dev spirv-tools
           
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
