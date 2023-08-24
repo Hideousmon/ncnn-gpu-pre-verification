@@ -34,14 +34,6 @@ jobs:
         with:
           submodules: true
 
-      - name: Show files
-        run: ls 
-        shell: bash
-
-      - name: cd dir
-        run: cd ncnn-python-gpu
-        shell: bash
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -58,10 +50,14 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
       
-      - name: cd dir
-        run: cd ncnn-python-gpu
+      - name: Show files
+        run: ls 
         shell: bash
-        
+
+      - name: cd dir
+        run: cd ./ncnn-python-gpu
+        shell: bash
+
       - name: Show files
         run: ls 
         shell: bash
