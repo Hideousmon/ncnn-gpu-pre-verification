@@ -74,39 +74,39 @@ jobs:
           echo "Vulkan SDK Version=='$VULKAN_SDK_VERSION'"
           echo "VULKAN_SDK=='$VULKAN_SDK'"
 
-      - name: list the vulkan dir
-        shell: bash
-        run: |
-          cd VULKAN_SDK
-          ls
-          echo ''
-          cd ./include/vulkan 
-          ls
-          echo ''
+      # - name: list the vulkan dir
+      #   shell: bash
+      #   run: |
+      #     cd VULKAN_SDK
+      #     ls
+      #     echo ''
+      #     cd ./include/vulkan 
+      #     ls
+      #     echo ''
           
-      # - name: Build wheels
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' NCNN_CI_VULKAN='TRUE' 
-      #   with:
-      #     package-dir: ./ncnn-python-gpu
-      #     output-dir: wheelhouse
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' NCNN_CI_VULKAN='TRUE' 
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
-      # - name: Show files
-      #   run: ls -lh wheelhouse
-      #   shell: bash
+      - name: Show files
+        run: ls -lh wheelhouse
+        shell: bash
 
-      # - name: Verify clean directory
-      #   run: git diff --exit-code
-      #   shell: bash
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
 
-      # - name: Upload wheels
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     path: wheelhouse/*.whl
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
         
