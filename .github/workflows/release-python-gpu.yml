@@ -80,7 +80,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 "VULKAN_SDK=='$VULKAN_SDK'"
           NCNN_VULKAN: 'TRUE'
         with:
           package-dir: ./ncnn-python-gpu
