@@ -54,8 +54,9 @@ jobs:
         run: ls 
         shell: bash
 
-      - name: cd dir
-        run: cd ./ncnn-python-gpu
+      - name: Enter submodule directory
+        run: |
+          cd ncnn-python-gpu
         shell: bash
 
       - name: Show files
