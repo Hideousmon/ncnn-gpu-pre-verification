@@ -83,13 +83,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: |
-            CMAKE_BUILD_PARALLEL_LEVEL=2
-            NCNN_VULKAN='TRUE'
-            VULKAN_SDK=='$VULKAN_SDK'
-            Vulkan_LIBRARY=='$VULKAN_SDK/lib'
-            Vulkan_INCLUDE_DIR=='$VULKAN_SDK/include'
-          
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' VULKAN_SDK=='$VULKAN_SDK' Vulkan_LIBRARY=='$VULKAN_SDK/lib' Vulkan_INCLUDE_DIR=='$VULKAN_SDK/include'
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
