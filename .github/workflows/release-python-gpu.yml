@@ -37,25 +37,40 @@ jobs:
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
-  
-      - name: brew uninstall libomp
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew uninstall --ignore-dependencies libomp
 
-      - name: Prepare Vulkan SDK
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        with:
-          vulkan-query-version: 1.3.204.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          vulkan-use-cache: true
-      
-      - name: Test Vulkan SDK Install
+      - name: check submodules
         shell: bash
         run: |
-          echo "Vulkan SDK Version=='$VULKAN_SDK_VERSION'"
-          echo "VULKAN_SDK=='$VULKAN_SDK'"
-          glslangValidator --version
+            cd ncnn-python-gpu
+            ls -lh glslang
+            cd python
+            ls -lh pybind11
+  
+      # - name: brew uninstall libomp
+      #   if: matrix.os == 'macos-latest'
+      #   run: |
+      #     brew uninstall --ignore-dependencies libomp
+
+      # - name: Prepare Vulkan SDK
+      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
+      #   with:
+      #     vulkan-query-version: 1.3.204.0
+      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+      #     vulkan-use-cache: true
+      
+      # - name: Test Vulkan SDK Install
+      #   shell: bash
+      #   run: |
+      #     echo "Vulkan SDK Version=='$VULKAN_SDK_VERSION'"
+      #     echo "VULKAN_SDK=='$VULKAN_SDK'"
+
+      # - name: init submodule
+      #   shell: bash
+      #   run: |
+      #     cd ncnn-python-gpu
+      #     git submodule
+      
+      
 
       # - name: Build wheels
       #   uses: pypa/cibuildwheel@v2.15.0
