@@ -59,13 +59,13 @@ jobs:
         if: matrix.os == 'macos-latest'
         run: |
           brew uninstall --ignore-dependencies libomp
-      
-      # install deps on ubuntu-20.04
-      - name: install deps
-        if: matrix.os == 'ubuntu-20.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install libprotobuf-dev protobuf-compiler libopencv-dev libvulkan-dev glslang-dev spirv-tools
+
+      - name: Prepare Vulkan SDK
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: 1.3.204.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
           
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
@@ -75,7 +75,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' 
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN='TRUE' NCNN_CI_VULKAN='TRUE' VULKAN_SDK=='$VULKAN_SDK'
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
