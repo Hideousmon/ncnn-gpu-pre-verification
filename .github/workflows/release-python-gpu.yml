@@ -75,8 +75,8 @@ jobs:
       - name: add env
         shell: bash
         run: |
-          $env:NCNN_VULKAN="TRUE"
-          $env:VULKAN_SDK='$VULKAN_SDK'
+          echo "NCNN_VULKAN='TRUE'" >> $GITHUB_ENV
+          echo "VULKAN_SDK='$VULKAN_SDK'" >> $GITHUB_ENV
 
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
