@@ -64,7 +64,7 @@ jobs:
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: 1.3.211.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader, Glslang
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
 
       - name: list the vulkan dir
@@ -76,7 +76,7 @@ jobs:
           ls
           cd ../lib
           ls
-          
+
 
           
       # - name: Build wheels
