@@ -62,7 +62,7 @@ jobs:
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2
           NCNN_VULKAN: 'TRUE'
         with:
-          pacakge-dir: ./ncnn-python-gpu
+          package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
       - name: Show files
