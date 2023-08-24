@@ -30,14 +30,18 @@ jobs:
           - { os: macos-latest, arch: universal2, build: 'cp*'            }
 
     steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+          
+      - name: Show files
+        run: ls 
+        shell: bash
+
       - name: cd dir
         run: cd ncnn-python-gpu
         shell: bash
 
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-  
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
