@@ -72,6 +72,12 @@ jobs:
           echo "Vulkan SDK Version=='$VULKAN_SDK_VERSION'"
           echo "VULKAN_SDK=='$VULKAN_SDK'"
 
+      - name: add env
+        shell: bash
+        run: |
+          $env:NCNN_VULKAN="TRUE"
+          $env:VULKAN_SDK='$VULKAN_SDK'
+
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
         env:
@@ -81,8 +87,8 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 
-          NCNN_VULKAN: 'TRUE'
-          VULKAN_SDK: $VULKAN_SDK
+          # NCNN_VULKAN: 'TRUE'
+          # VULKAN_SDK: $VULKAN_SDK
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
