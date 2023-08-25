@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.8'
 
       # - name: check submodules
       #   shell: bash
@@ -73,7 +73,6 @@ jobs:
       #   shell: bash
       #   run: |
       #     echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-      #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
       #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
       # - name: show Vulkan
@@ -123,7 +122,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 # VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          CIBW_BEFORE_BUILD: cd /project/ncnn-python-gpu/&&ls&&echo ""&&cd /project/ncnn-python-gpu/1.2.189.0/x86_64&&ls&&echo ""
+          # CIBW_BEFORE_BUILD: cd /project/ncnn-python-gpu/&&ls&&echo ""&&cd /project/ncnn-python-gpu/1.2.189.0/x86_64&&ls&&echo ""
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
