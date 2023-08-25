@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp38-manylinux*' }
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp38-manylinux*' }
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
@@ -140,7 +140,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
+          # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
