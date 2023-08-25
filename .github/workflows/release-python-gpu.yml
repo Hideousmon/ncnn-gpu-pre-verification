@@ -75,15 +75,15 @@ jobs:
           echo "Vulkan SDK Version='$VULKAN_SDK_VERSION'"
           echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
-      - name: list the vulkan dir
-        shell: bash
-        run: |
-          cd VULKAN_SDK
-          ls
-          echo ''
-          cd ./include/vulkan 
-          ls
-          echo ''
+      # - name: list the vulkan dir
+      #   shell: bash
+      #   run: |
+      #     cd VULKAN_SDK
+      #     ls
+      #     echo ''
+      #     cd ./include/vulkan 
+      #     ls
+      #     echo ''
           
       - name: Build wheels
         uses: pypa/cibuildwheel@v2.15.0
