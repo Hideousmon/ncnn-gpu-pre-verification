@@ -15,7 +15,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp38-manylinux*' }
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
@@ -45,7 +45,7 @@ jobs:
 
       - uses: actions/setup-python@v4
         with:
-          python-version: '3.8'
+          python-version: '3.x'
 
       # - name: check submodules
       #   shell: bash
@@ -74,6 +74,7 @@ jobs:
       #   run: |
       #     echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
       #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+
 
       # - name: show Vulkan
       #   shell: bash
