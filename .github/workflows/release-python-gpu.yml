@@ -65,7 +65,7 @@ jobs:
         with:
           vulkan-query-version: 1.3.250.0
           vulkan-components: Vulkan-Headers, Vulkan-Loader
-          # vulkan-use-cache: true
+          vulkan-use-cache: true
       
 
       - id: verify-vulkan
@@ -81,10 +81,12 @@ jobs:
         run: |
           cd $VULKAN_SDK
           ls
-          echo ""
+          echo " "
           cd share
           ls
-          echo ""
+          echo " "
+          cd cmake
+          echo " "
 
       # - name: list the vulkan dir
       #   shell: bash
