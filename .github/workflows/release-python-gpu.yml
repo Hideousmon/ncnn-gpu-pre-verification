@@ -15,20 +15,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
-          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
-          # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
-          # - { os: windows-2019, arch: x86,        build: 'cp*'            }
-          # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
-          # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
+          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
+          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
+          - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
+          - { os: windows-2019, arch: x86,        build: 'cp*'            }
+          - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
+          - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
+          - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
           - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
-          # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          # - { os: macos-latest, arch: arm64,      build: 'cp*'            }
-          # - { os: macos-latest, arch: universal2, build: 'cp*'            }
+          - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
+          - { os: macos-latest, arch: arm64,      build: 'cp*'            }
+          - { os: macos-latest, arch: universal2, build: 'cp*'            }
 
     steps:
       - uses: actions/checkout@v3
@@ -87,7 +87,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 # VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
           # CIBW_BEFORE_BUILD: cd /project/ncnn-python-gpu/&&ls&&echo ""&&cd /project/ncnn-python-gpu/1.2.189.0/x86_64&&ls&&echo ""
         with:
           package-dir: ./ncnn-python-gpu
