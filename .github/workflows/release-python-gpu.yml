@@ -104,18 +104,19 @@ jobs:
       #   shell: bash
       #   run: find / -name pkgconfig
           
-      # - name: Build wheels
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-      #   with:
-      #     package-dir: ./ncnn-python-gpu
-      #     output-dir: wheelhouse
+      - name: Build wheels
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIVW_BEFORE_BUILD: cd VULKAN_SDK&ls
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
       # - name: Show files
       #   run: ls -lh wheelhouse
