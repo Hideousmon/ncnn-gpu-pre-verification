@@ -105,7 +105,7 @@ jobs:
       #   run: find / -name pkgconfig
           
       - name: Build wheels
-        if matrix.os == 'ubuntu-20.04'
+        if: matrix.os == 'ubuntu-20.04'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
