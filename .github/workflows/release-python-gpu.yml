@@ -142,7 +142,7 @@ jobs:
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
           # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
         with:
-          package-dir: ./ncnn-python-gpu
+          package-dir: ncnn-python-gpu
           output-dir: wheelhouse
 
       - name: Show files
