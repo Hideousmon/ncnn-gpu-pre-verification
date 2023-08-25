@@ -87,6 +87,8 @@ jobs:
           echo " "
           ls -lh cmake
           echo " "
+          ls -lh vulkan
+          echo " "
 
       # - name: list the vulkan dir
       #   shell: bash
