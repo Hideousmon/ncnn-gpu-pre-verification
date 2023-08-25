@@ -22,10 +22,10 @@ jobs:
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
           # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
           # - { os: windows-2019, arch: x86,        build: 'cp*'            }
-          - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
+          # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
           # - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
-          # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
+          - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
           # - { os: macos-latest, arch: arm64,      build: 'cp*'            }
           # - { os: macos-latest, arch: universal2, build: 'cp*'            }
@@ -47,21 +47,13 @@ jobs:
         with:
           python-version: '3.x'
 
-      # - name: check submodules
-      #   shell: bash
-      #   run: |
-      #       cd ncnn-python-gpu
-      #       ls -lh glslang
-      #       cd python
-      #       ls -lh pybind11
-  
       - name: brew uninstall libomp
         if: matrix.os == 'macos-latest'
         run: |
           brew uninstall --ignore-dependencies libomp
 
       - name: Prepare Vulkan SDK
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: 1.2.189.0
@@ -70,38 +62,12 @@ jobs:
       
 
       - id: verify-vulkan
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
         name: Verify Vulkan SDK Install
         shell: bash
         run: |
           echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
           echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
-
-
-      # - name: show Vulkan
-      #   shell: bash
-      #   run: |
-      #     cd $VULKAN_SDK
-      #     ls
-      #     echo " "
-      #     cd share
-      #     ls
-      #     echo " "
-      #     ls -lh cmake
-      #     echo " "
-      #     ls -lh vulkan
-      #     echo " "
-
-      # - name: list the vulkan dir
-      #   shell: bash
-      #   run: |
-      #     cd VULKAN_SDK
-      #     ls
-      #     echo ''
-      #     cd ./include/vulkan 
-      #     ls
-      #     echo ''
-
 
       - name: download vulkan
         if: matrix.os == 'ubuntu-20.04'
@@ -128,7 +94,7 @@ jobs:
           output-dir: wheelhouse
 
       - name: Build wheels
-        if: matrix.os == 'windows-2019'
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
