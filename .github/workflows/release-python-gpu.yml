@@ -60,35 +60,35 @@ jobs:
         run: |
           brew uninstall --ignore-dependencies libomp
 
-      - name: Prepare Vulkan SDK
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        with:
-          vulkan-query-version: 1.3.250.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          # vulkan-use-cache: true
+      # - name: Prepare Vulkan SDK
+      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
+      #   with:
+      #     vulkan-query-version: 1.3.250.0
+      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+      #     vulkan-use-cache: true
       
 
-      - id: verify-vulkan
-        name: Verify Vulkan SDK Install
-        shell: bash
-        run: |
-          echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
-          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+      # - id: verify-vulkan
+      #   name: Verify Vulkan SDK Install
+      #   shell: bash
+      #   run: |
+      #     echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
+      #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+      #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
-      - name: show Vulkan
-        shell: bash
-        run: |
-          cd $VULKAN_SDK
-          ls
-          echo " "
-          cd share
-          ls
-          echo " "
-          ls -lh cmake
-          echo " "
-          ls -lh vulkan
-          echo " "
+      # - name: show Vulkan
+      #   shell: bash
+      #   run: |
+      #     cd $VULKAN_SDK
+      #     ls
+      #     echo " "
+      #     cd share
+      #     ls
+      #     echo " "
+      #     ls -lh cmake
+      #     echo " "
+      #     ls -lh vulkan
+      #     echo " "
 
       # - name: list the vulkan dir
       #   shell: bash
@@ -105,6 +105,7 @@ jobs:
       #   run: find / -name pkgconfig
           
       - name: Build wheels
+        if matrix.os == 'ubuntu-20.04'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -112,8 +113,8 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          CIVW_BEFORE_BUILD: cd VULKAN_SDK&ls
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE # VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIVW_BEFORE_BUILD: sudo apt install build-essential git cmake libprotobuf-dev protobuf-compiler libvulkan-dev vulkan-utils libopencv-dev
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
