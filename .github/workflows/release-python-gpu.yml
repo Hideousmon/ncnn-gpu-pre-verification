@@ -123,7 +123,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/1.2.189.0/x86_64 # VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          # CIBW_BEFORE_BUILD: export VULKAN_SDK=/project/1.2.189.0/x86_64
+          CIBW_BEFORE_BUILD: cd /project/&&ls&&echo ""&&cd /project/1.2.189.0/x86_64&&ls&&echo ""
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
