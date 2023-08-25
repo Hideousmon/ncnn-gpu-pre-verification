@@ -102,9 +102,6 @@ jobs:
       #     ls
       #     echo ''
 
-      # - name: find pkgconfig
-      #   shell: bash
-      #   run: find / -name pkgconfig
 
       - name: download vulkan
         if: matrix.os == 'ubuntu-20.04'
