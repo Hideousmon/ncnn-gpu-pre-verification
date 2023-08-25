@@ -55,27 +55,27 @@ jobs:
       #       cd python
       #       ls -lh pybind11
   
-      - name: brew uninstall libomp
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew uninstall --ignore-dependencies libomp
+      # - name: brew uninstall libomp
+      #   if: matrix.os == 'macos-latest'
+      #   run: |
+      #     brew uninstall --ignore-dependencies libomp
 
-      - name: Prepare Vulkan SDK
-        if: matrix.os == 'windows-2019'
-        uses: humbletim/setup-vulkan-sdk@v1.2.0
-        with:
-          vulkan-query-version: 1.2.189.0
-          vulkan-components: Vulkan-Headers, Vulkan-Loader
-          vulkan-use-cache: true
+      # - name: Prepare Vulkan SDK
+      #   if: matrix.os == 'windows-2019'
+      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
+      #   with:
+      #     vulkan-query-version: 1.2.189.0
+      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
+      #     vulkan-use-cache: true
       
 
-      - id: verify-vulkan
-        if: matrix.os == 'windows-2019'
-        name: Verify Vulkan SDK Install
-        shell: bash
-        run: |
-          echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+      # - id: verify-vulkan
+      #   if: matrix.os == 'windows-2019'
+      #   name: Verify Vulkan SDK Install
+      #   shell: bash
+      #   run: |
+      #     echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
+      #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
 
       # - name: show Vulkan
@@ -136,7 +136,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE #VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
           # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
         with:
           package-dir: ncnn-python-gpu
