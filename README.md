@@ -31,5 +31,7 @@
 ### TO DO
 
 - [ ] build wheels on i686、x86、arm64、universal2 with vulkan.
+- [ ] test without libvulkan.
+- [ ] compile with vulkan loader.
 - [ ] test the wheels.
 - [ ] pull request to ncnn.
