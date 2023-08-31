@@ -16,19 +16,19 @@ jobs:
       matrix:
         include:
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' } # check if gpu (only cpu now)
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
-          # - { os: windows-2019, arch: x86,        build: 'cp*'            }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } # replace vulkan for i686
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } # replace vulkan for i686 check if gpu  (only cpu now)
+          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } # replace vulkan for i686
+          # - { os: windows-2019, arch: x86,        build: 'cp*'            } # replace vulkan for 32
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
+          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            } # replace vulkan for arm64
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          # - { os: macos-latest, arch: arm64,      build: 'cp*'            }
-          # - { os: macos-latest, arch: universal2, build: 'cp*'            }
+          # - { os: macos-latest, arch: arm64,      build: 'cp*'            } # replace vulkan for arm64
+          # - { os: macos-latest, arch: universal2, build: 'cp*'            } # replace vulkan for universal2
 
     steps:
       - uses: actions/checkout@v3
@@ -76,11 +76,6 @@ jobs:
           wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
 
-      # - name: debug
-      #   shell: bash
-      #   run: |
-      #     sudo apt install glibc-doc
-
       # ubuntu-20.04 
       - name: Build wheels
         if: matrix.os == 'ubuntu-20.04' && matrix.build != 'cp*-musllinux*'
@@ -91,12 +86,12 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      # ubuntu-20.04 musllinux
+      # ubuntu-20.04 musllinux cpu only now
       - name: Build wheels
         if: matrix.os == 'ubuntu-20.04' && matrix.build == 'cp*-musllinux*'
         uses: pypa/cibuildwheel@v2.15.0
@@ -106,8 +101,8 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
-          CIBW_BEFORE_ALL_LINUX: apk add libc6-compat
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
+          # CIBW_BEFORE_ALL_LINUX: apk add libc6-compat
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
@@ -121,7 +116,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
           # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
         with:
           package-dir: ncnn-python-gpu
