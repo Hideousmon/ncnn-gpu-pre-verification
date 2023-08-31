@@ -35,92 +35,92 @@ jobs:
         with:
           submodules: true
       
-      # - name: init submodules
-      #   shell: bash
-      #   run: |
-      #     cd ncnn-python-gpu
-      #     git submodule update --init
-      #     cd python
-      #     git submodule update --init
+      - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
 
-      # - uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.x'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-      # - name: brew uninstall libomp
-      #   if: matrix.os == 'macos-latest'
-      #   run: |
-      #     brew uninstall --ignore-dependencies libomp
+      - name: brew uninstall libomp
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew uninstall --ignore-dependencies libomp
 
-      # - name: Prepare Vulkan SDK
-      #   if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
-      #   uses: humbletim/setup-vulkan-sdk@v1.2.0
-      #   with:
-      #     vulkan-query-version: 1.2.189.0
-      #     vulkan-components: Vulkan-Headers, Vulkan-Loader
-      #     vulkan-use-cache: true
+      - name: Prepare Vulkan SDK
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: 1.2.189.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
       
-      # - id: verify-vulkan
-      #   if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
-      #   name: Verify Vulkan SDK Install
-      #   shell: bash
-      #   run: |
-      #     echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-      #     echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+      - id: verify-vulkan
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
+        name: Verify Vulkan SDK Install
+        shell: bash
+        run: |
+          echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
+          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
-      # - name: download vulkan
-      #   if: matrix.os == 'ubuntu-20.04'
-      #   shell: bash
-      #   run: |
-      #     cd ncnn-python-gpu
-      #     wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
-      #     tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
+      - name: download vulkan
+        if: matrix.os == 'ubuntu-20.04'
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
+          tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
 
       - name: debug
         shell: bash
         run: |
           sudo apt install glibc-doc
 
-      # - name: Build wheels
-      #   if: matrix.os == 'ubuntu-20.04'
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
-      #     # CIBW_BEFORE_BUILD: cd /project/ncnn-python-gpu/&&ls&&echo ""&&cd /project/ncnn-python-gpu/1.2.189.0/x86_64&&ls&&echo ""
-      #   with:
-      #     package-dir: ./ncnn-python-gpu
-      #     output-dir: wheelhouse
+      - name: Build wheels
+        if: matrix.os == 'ubuntu-20.04'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
+          # CIBW_BEFORE_BUILD: cd /project/ncnn-python-gpu/&&ls&&echo ""&&cd /project/ncnn-python-gpu/1.2.189.0/x86_64&&ls&&echo ""
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
-      # - name: Build wheels
-      #   if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-      #     # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
-      #   with:
-      #     package-dir: ncnn-python-gpu
-      #     output-dir: wheelhouse
+      - name: Build wheels
+        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          # CIBW_BEFORE_BUILD: cd VULKAN_SDK&&ls&&echo ""
+        with:
+          package-dir: ncnn-python-gpu
+          output-dir: wheelhouse
 
-      # - name: Show files
-      #   run: ls -lh wheelhouse
-      #   shell: bash
+      - name: Show files
+        run: ls -lh wheelhouse
+        shell: bash
 
-      # - name: Verify clean directory
-      #   run: git diff --exit-code
-      #   shell: bash
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
 
-      # - name: Upload wheels
-      #   uses: actions/upload-artifact@v3
-      #   with:
-      #     path: wheelhouse/*.whl
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
         
