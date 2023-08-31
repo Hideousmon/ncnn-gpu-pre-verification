@@ -79,7 +79,7 @@ jobs:
       - name: debug
         shell: bash
         run: |
-          sudo apt install glibc glibc-doc
+          sudo apt install glibc-doc
 
       # - name: Build wheels
       #   if: matrix.os == 'ubuntu-20.04'
