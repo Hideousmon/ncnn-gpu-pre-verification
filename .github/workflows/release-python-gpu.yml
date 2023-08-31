@@ -91,7 +91,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE NCNN_CI_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
-          CIBW_BEFORE_ALL_LINUX: yum install -y build-essential
+          CIBW_BEFORE_ALL_LINUX: apk add build-essential
           # CIBW_BEFORE_ALL: apt install build-essential
         with:
           package-dir: ./ncnn-python-gpu
