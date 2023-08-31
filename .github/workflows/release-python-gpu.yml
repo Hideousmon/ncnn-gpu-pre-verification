@@ -15,20 +15,20 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
           - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
-          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
-          - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
-          - { os: windows-2019, arch: x86,        build: 'cp*'            }
-          - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
-          - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
-          - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
-          - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          - { os: macos-latest, arch: arm64,      build: 'cp*'            }
-          - { os: macos-latest, arch: universal2, build: 'cp*'            }
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' }
+          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            }
+          # - { os: windows-2019, arch: x86,        build: 'cp*'            }
+          # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
+          # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
+          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            }
+          # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
+          # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
+          # - { os: macos-latest, arch: arm64,      build: 'cp*'            }
+          # - { os: macos-latest, arch: universal2, build: 'cp*'            }
 
     steps:
       - uses: actions/checkout@v3
@@ -60,7 +60,6 @@ jobs:
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
       
-
       - id: verify-vulkan
         if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
         name: Verify Vulkan SDK Install
@@ -77,7 +76,11 @@ jobs:
           wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
 
-          
+      - name: debug
+        shell: bash
+        run: |
+          ls -lh /usr/lib/
+
       - name: Build wheels
         if: matrix.os == 'ubuntu-20.04'
         uses: pypa/cibuildwheel@v2.15.0
