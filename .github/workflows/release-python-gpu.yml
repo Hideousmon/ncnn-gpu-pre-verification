@@ -80,6 +80,7 @@ jobs:
         shell: bash
         run: |
           ls -lh /usr/lib/x86_64-linux-gnu/
+          apt install glibc
 
       - name: Build wheels
         if: matrix.os == 'ubuntu-20.04'
