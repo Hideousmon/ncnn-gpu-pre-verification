@@ -79,7 +79,7 @@ jobs:
       - name: debug
         shell: bash
         run: |
-          ls -lh /usr/lib/
+          ls -lh /usr/lib/x86_64-linux-gnu/
 
       - name: Build wheels
         if: matrix.os == 'ubuntu-20.04'
