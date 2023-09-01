@@ -16,9 +16,9 @@ jobs:
       matrix:
         include:
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
-          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' } # check if gpu (only cpu now)
+          # - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' } # check if gpu (only cpu now)
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-          # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } # replace vulkan for i686
+          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } # replace vulkan for i686
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } # replace vulkan for i686 check if gpu  (only cpu now)
           # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } # replace vulkan for i686
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } # replace vulkan for 32
@@ -47,37 +47,47 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: brew uninstall libomp
+      - name: brew uninstall libomp for macos
         if: matrix.os == 'macos-latest'
         run: |
           brew uninstall --ignore-dependencies libomp
 
-      - name: Prepare Vulkan SDK
-        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
+      - name: prepare vulkan sdk for windows amd64 and macos x86_64
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: 1.2.189.0
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
       
-      - id: verify-vulkan
-        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
-        name: Verify Vulkan SDK Install
-        shell: bash
-        run: |
-          echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
-
-      - name: download vulkan
-        if: matrix.os == 'ubuntu-20.04'
+      - name: prepare vulkan sdk for ubuntu x86_64
+        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64'
         shell: bash
         run: |
           cd ncnn-python-gpu
           wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
 
-      # ubuntu-20.04 
-      - name: Build wheels
+      - name: prepare vulkan sdk for ubuntu i686
+        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'i686'
+        shell: bash
+        run: |
+          wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
+          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list
+          sudo apt update
+          sudo apt install vulkan-sdk
+      
+      - id: verify-vulkan for windows amd64 and macos x86_64
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
+        name: Verify Vulkan SDK Install
+        shell: bash
+        run: |
+          echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
+          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+
+      - name: Build wheels for ubuntu-20.04 manylinux
         if: matrix.os == 'ubuntu-20.04' && matrix.build != 'cp*-musllinux*'
         uses: pypa/cibuildwheel@v2.15.0
         env:
@@ -91,8 +101,7 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      # ubuntu-20.04 musllinux cpu only now
-      - name: Build wheels
+      - name: Build wheels for ubuntu-20.04 musllinux - cpu only now
         if: matrix.os == 'ubuntu-20.04' && matrix.build == 'cp*-musllinux*'
         uses: pypa/cibuildwheel@v2.15.0
         env:
@@ -107,8 +116,9 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: Build wheels
-        if: matrix.os == 'windows-2019' || matrix.os == 'macos-latest'
+      - name: Build wheels for windows amd64 and macos x86_64
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
