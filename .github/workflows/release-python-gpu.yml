@@ -69,19 +69,9 @@ jobs:
           wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
           tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
 
-      - name: prepare vulkan sdk for ubuntu i686
-        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'i686'
-        shell: bash
-        run: |
-          wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add -
-          sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list
-          sudo apt update
-          sudo apt install vulkan-sdk
-      
       - id: verify-vulkan
         if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64') ||
-            (matrix.os == 'ubuntu-20.04' && matrix.arch == 'i686')
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
         name: verify vulkan sdk install for windows amd64 and macos x86_64 and ubuntu i686
         shell: bash
         run: |
@@ -114,6 +104,10 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_BEFORE_ALL_LINUX: wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add - &&
+                                 sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list &&
+                                 sudo apt update &&
+                                 sudo apt install vulkan-sdk
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
