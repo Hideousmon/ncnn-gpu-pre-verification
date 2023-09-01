@@ -30,8 +30,7 @@
 
 ### TO DO
 
-- [ ] build wheels on i686、x86、arm64、universal2 with vulkan.
-- [ ] test without libvulkan.
-- [ ] compile with vulkan loader.
-- [ ] test the wheels.
+- [ ] ~~build wheels on i686, x86, arm64, universal2 with vulkan~~.
+- [ ] record the issues on i686, x86, arm64, universal2.
+- [ ] pytest without libvulkan.
 - [ ] pull request to ncnn.
