@@ -104,7 +104,8 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          CIBW_BEFORE_ALL_LINUX: wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add - &&
+          CIBW_BEFORE_ALL_LINUX: sudo apt install wget &&
+                                 wget -qO - http://packages.lunarg.com/lunarg-signing-key-pub.asc | sudo apt-key add - &&
                                  sudo wget -qO /etc/apt/sources.list.d/lunarg-vulkan-focal.list http://packages.lunarg.com/vulkan/lunarg-vulkan-focal.list &&
                                  sudo apt update &&
                                  sudo apt install vulkan-sdk
