@@ -78,10 +78,10 @@ jobs:
           sudo apt update
           sudo apt install vulkan-sdk
       
-      - id: verify vulkan for windows amd64 and macos x86_64
+      - id: verify-vulkan
         if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
             (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
-        name: Verify Vulkan SDK Install
+        name: verify vulkan sdk install for windows amd64 and macos x86_64
         shell: bash
         run: |
           echo "Vulkan_SDK_Version='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
