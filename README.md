@@ -3,13 +3,13 @@
 
 |                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 |
 | :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: |
-| ubuntu (cp-manylinux) |   √    |      |  -   |   -   |   -   |     -      |
-| ubuntu (cp-musllinux) |        |      |  -   |   -   |   -   |     -      |
-|      ubuntu (pp)      |   √    |      |  -   |   -   |   -   |     -      |
+| ubuntu (cp-manylinux) |   √    | cpu  |  -   |   -   |   -   |     -      |
+| ubuntu (cp-musllinux) |  cpu   | cpu  |  -   |   -   |   -   |     -      |
+|      ubuntu (pp)      |   √    | cpu  |  -   |   -   |   -   |     -      |
 |     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      |
-|     windows (cp)      |   -    |  -   |      |   √   |       |     -      |
+|     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      |
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      |
-|      macos (cp)       |   √    |  -   |  -   |   -   |       |            |
+|      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     |
 
 ### yolov4-tiny inference on windows  (without installing vulkan sdk)
 
