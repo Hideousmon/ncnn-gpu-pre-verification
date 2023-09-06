@@ -200,12 +200,12 @@ jobs:
         submodules: true
 
     - name: init submodules
-        shell: bash
-        run: |
-          cd ncnn-python-gpu
-          git submodule update --init
-          cd python
-          git submodule update --init
+      shell: bash
+      run: |
+        cd ncnn-python-gpu
+        git submodule update --init
+        cd python
+        git submodule update --init
 
     - uses: actions/setup-python@v4
       with:
