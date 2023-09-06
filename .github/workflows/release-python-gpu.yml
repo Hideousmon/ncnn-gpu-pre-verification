@@ -24,10 +24,6 @@ jobs:
           cd python
           git submodule update --init
 
-      - name: change folder
-        shell: bash
-        run: cd ..
-
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -36,14 +32,18 @@ jobs:
         run: python -m pip install twine build
 
       - name: Build SDist
-        run: python -m build -s
+        run: |
+            cd ncnn-python-gpu
+            python -m build -s
 
       - name: Check metadata
-        run: twine check dist/*
+        run: |
+            cd ncnn-python-gpu
+            twine check dist/*
 
       - uses: actions/upload-artifact@v3
         with:
-          path: dist/*.tar.gz
+          path: ncnn-python-gpu/dist/*.tar.gz
 
   build_wheels:
     name: ${{ matrix.arch }} ${{ matrix.build }} on ${{ matrix.os }}
