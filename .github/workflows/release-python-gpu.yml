@@ -99,7 +99,7 @@ jobs:
           vulkan-use-cache: true
       
       - name: prepare vulkan sdk for ubuntu x86_64
-        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*
+        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*'
         shell: bash
         run: |
           cd ncnn-python-gpu
@@ -116,7 +116,7 @@ jobs:
           echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
 
       - name: Build wheels for ubuntu-20.04 x86_64 manylinux 
-        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*
+        if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
