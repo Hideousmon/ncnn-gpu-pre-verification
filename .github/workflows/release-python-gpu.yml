@@ -16,6 +16,18 @@ jobs:
         with:
           submodules: true
 
+      - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
+
+      - name: change folder
+        shell: bash
+        run: cd ..
+
       - uses: actions/setup-python@v4
         with:
           python-version: '3.x'
@@ -187,6 +199,14 @@ jobs:
       with:
         submodules: true
 
+    - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
+
     - uses: actions/setup-python@v4
       with:
         python-version: '3.x'
@@ -203,6 +223,9 @@ jobs:
         CIBW_BUILD: ${{ matrix.build }}
         CIBW_BUILD_VERBOSITY: 1
         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2
+      with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
     - name: Show files
       run: ls -lh wheelhouse
