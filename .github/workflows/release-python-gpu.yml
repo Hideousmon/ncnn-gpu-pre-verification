@@ -60,6 +60,15 @@ jobs:
           vulkan-query-version: 1.2.189.0
           vulkan-components: Vulkan-Headers, Vulkan-Loader
           vulkan-use-cache: true
+
+      - name: prepare vulkan sdk for macos arm64 and universal2
+        if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: 1.3.236.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
       
       - name: prepare vulkan sdk for ubuntu x86_64
         if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64'
@@ -117,7 +126,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
@@ -163,6 +172,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_BEFORE_ALL: 
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
