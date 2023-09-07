@@ -23,5 +23,5 @@ if __name__ == "__main__":
         print(glob.glob(r'/usr/lib64/*.so*', recursive=True))
 
     if platform.system() == 'Windows':
-        # print(glob.glob(r'/usr/lib/libvulkan*', recursive=True))
+        print(glob.glob(r'/usr/lib/libvulkan*', recursive=True))
         # print(glob.glob(r'/usr/lib64/libvulkan*', recursive=True))
