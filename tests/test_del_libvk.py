@@ -22,5 +22,6 @@ if __name__ == "__main__":
         print(glob.glob(r'/usr/lib/**/libvulkan.so*'))
 
     if platform.system() == 'Windows':
-        print(glob.glob(r'c:\\Windows\\SysWOW64\\**\\libvulkan*'))
+        print(glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*'))
+        print(glob.glob(r'c:\Windows\System32\**\libvulkan*'))
 
