@@ -18,4 +18,5 @@ import glob
 
 if __name__ == "__main__":
     print(platform.system())
-    print(glob.glob(r'c:\libvulkan.dll'))
+    if platform.system() == 'Linux':
+        print(glob.glob(r'/*/libvulkan.so'))
