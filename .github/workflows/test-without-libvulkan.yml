@@ -55,5 +55,6 @@ jobs:
 
       - name: test del libvulkan
         run: |
+          sudo apt install libvulkan1
           python tests/test_del_libvk.py
       

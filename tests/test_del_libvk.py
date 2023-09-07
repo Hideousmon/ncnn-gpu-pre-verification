@@ -21,3 +21,7 @@ if __name__ == "__main__":
     if platform.system() == 'Linux':
         print(glob.glob(r'/usr/lib/libvulkan*', recursive=True))
         print(glob.glob(r'/usr/lib64/libvulkan*', recursive=True))
+
+    if platform.system() == 'Windows':
+        print(glob.glob(r'/usr/lib/libvulkan*', recursive=True))
+        print(glob.glob(r'/usr/lib64/libvulkan*', recursive=True))
