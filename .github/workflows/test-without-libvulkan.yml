@@ -1,0 +1,41 @@
+name: test-without-libvulkan
+
+on:
+  push:
+    branches: [main]
+    # tags:
+    #   - '*'
+
+
+jobs:
+  net_test:
+    name: ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-20.04}
+          # - { os: windows-2019}
+          # - { os: macos-latest}
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.8'
+
+      - name: install ncnn for ubuntu
+        if: matrix.os == 'ubuntu-20.04'
+        shell: bash
+        run: |
+          pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          pip install numpy pytest
+
+      - name: test with pytest
+        run: |
+          pytest tests/test_net_withoutvk.py
+      
