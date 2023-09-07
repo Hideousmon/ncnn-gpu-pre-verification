@@ -19,4 +19,5 @@ import glob
 if __name__ == "__main__":
     print(platform.system())
     if platform.system() == 'Linux':
-        print(glob.glob(r'/**/libvulkan.so', recursive=True))
+        print(glob.glob(r'/usr/lib/libvulkan*', recursive=True))
+        print(glob.glob(r'/usr/lib64/libvulkan*', recursive=True))
