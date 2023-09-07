@@ -16,7 +16,7 @@ jobs:
       matrix:
         include:
           - { os: ubuntu-20.04}
-          # - { os: windows-2019}
+          - { os: windows-2019}
           # - { os: macos-latest}
 
     steps:
@@ -55,8 +55,5 @@ jobs:
 
       - name: test del libvulkan
         run: |
-          sudo find /usr/lib /usr/lib64 -name libvulkan.so*
-          sudo apt install libvulkan1
-          sudo find /usr/lib /usr/lib64 -name libvulkan.so*
           python tests/test_del_libvk.py
       
