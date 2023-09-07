@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-          pip install numpy pytest
+          pip install pytest
 
       - name: test with pytest
         run: |
