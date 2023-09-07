@@ -26,7 +26,7 @@ if __name__ == "__main__":
         print(glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*'))
         print(glob.glob(r'c:\Windows\System32\**\libvulkan*'))
 
-    if platform.system() == 'Macos':
+    if platform.system() == 'Darwin':
         print(glob.glob(r'/usr/local/lib/**/libvulkan*'))
         print(glob.glob(r'/usr/local/lib64/**/libvulkan*'))
 
