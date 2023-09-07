@@ -19,9 +19,14 @@ import glob
 if __name__ == "__main__":
     print(platform.system())
     if platform.system() == 'Linux':
-        print(glob.glob(r'/usr/lib/**/libvulkan.so*'))
+        print(glob.glob(r'/usr/lib/**/libvulkan*'))
+        print(glob.glob(r'/usr/lib64/**/libvulkan*'))
 
     if platform.system() == 'Windows':
         print(glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*'))
         print(glob.glob(r'c:\Windows\System32\**\libvulkan*'))
+
+    if platform.system() == 'Macos':
+        print(glob.glob(r'/usr/local/lib/**/libvulkan*'))
+        print(glob.glob(r'/usr/local/lib64/**/libvulkan*'))
 
