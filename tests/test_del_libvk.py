@@ -34,9 +34,8 @@ if __name__ == "__main__":
     print(libs)
     print(libs64)
 
-    if libs != [] and libs64 != []:
+    if libs != [] or libs64 != []:
         for found_lib in libs:
-            print("found_lib:", found_lib)
             os.remove(found_lib)
         for found_lib in libs64:
             os.remove(found_lib)
