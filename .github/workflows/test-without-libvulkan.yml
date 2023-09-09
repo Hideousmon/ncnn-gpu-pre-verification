@@ -28,32 +28,32 @@ jobs:
         with:
           python-version: '3.8'
 
-      # - name: install ncnn for ubuntu
-      #   if: matrix.os == 'ubuntu-20.04'
-      #   shell: bash
-      #   run: |
-      #     pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
-      #     pip install pytest
-
-      # - name: install ncnn for windows
-      #   if: matrix.os == 'windows-2019'
-      #   shell: bash
-      #   run: |
-      #     pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-win_amd64.whl
-      #     pip install pytest
-
-      # - name: install ncnn for macos
-      #   if: matrix.os == 'macos-latest'
-      #   shell: bash
-      #   run: |
-      #     pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-macosx_10_9_x86_64.whl
-      #     pip install pytest
-
-      # - name: test with pytest
-      #   run: |
-      #     pytest tests/test_net_withoutvk.py
-
-      - name: test del libvulkan
+      - name: install ncnn for ubuntu
+        if: matrix.os == 'ubuntu-20.04'
+        shell: bash
         run: |
-          sudo python tests/test_del_libvk.py
+          pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          pip install pytest
+
+      - name: install ncnn for windows
+        if: matrix.os == 'windows-2019'
+        shell: bash
+        run: |
+          pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-win_amd64.whl
+          pip install pytest
+
+      - name: install ncnn for macos
+        if: matrix.os == 'macos-latest'
+        shell: bash
+        run: |
+          pip install built-wheels/ncnn-1.0.20230906-cp38-cp38-macosx_10_9_x86_64.whl
+          pip install pytest
+
+      - name: test with pytest
+        run: |
+          sudo pytest tests/test_net_withoutvk.py
+
+      # - name: test del libvulkan
+      #   run: |
+      #     sudo python tests/test_del_libvk.py
       
