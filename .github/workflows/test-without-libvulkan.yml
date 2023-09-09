@@ -55,5 +55,5 @@ jobs:
 
       - name: test del libvulkan
         run: |
-          python tests/test_del_libvk.py
+          sudo python tests/test_del_libvk.py
       
