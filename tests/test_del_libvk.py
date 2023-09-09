@@ -36,25 +36,26 @@ if __name__ == "__main__":
 
     if libs != [] and libs64 != []:
         for found_lib in libs:
+            print("found_lib:", found_lib)
             os.remove(found_lib)
         for found_lib in libs64:
             os.remove(found_lib)
         print("trying to remove the libs.")
 
     
-    if platform.system() == 'Linux':
-        libs = glob.glob(r'/usr/lib/**/libvulkan*')
-        libs64 = glob.glob(r'/usr/lib64/**/libvulkan*')
+        if platform.system() == 'Linux':
+            libs = glob.glob(r'/usr/lib/**/libvulkan*')
+            libs64 = glob.glob(r'/usr/lib64/**/libvulkan*')
 
-    if platform.system() == 'Windows':
-        libs = glob.glob(r'c:\Windows\System32\**\libvulkan*')
-        libs64 = glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*')
-        
+        if platform.system() == 'Windows':
+            libs = glob.glob(r'c:\Windows\System32\**\libvulkan*')
+            libs64 = glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*')
+            
 
-    if platform.system() == 'Darwin':
-        libs = glob.glob(r'/usr/local/lib/**/libvulkan*')
-        libs64 = glob.glob(r'/usr/local/lib64/**/libvulkan*')
+        if platform.system() == 'Darwin':
+            libs = glob.glob(r'/usr/local/lib/**/libvulkan*')
+            libs64 = glob.glob(r'/usr/local/lib64/**/libvulkan*')
 
-    print("after removing:")
-    print(libs)
-    print(libs64)
+        print("after removing:")
+        print(libs)
+        print(libs64)
