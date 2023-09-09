@@ -15,6 +15,7 @@
 import numpy as np
 import platform
 import pytest
+import glob
 
 import ncnn
 
@@ -44,7 +45,20 @@ def test_net():
 
 
 def test_net_without_vulkan():
-    print(platform.system())
+    if platform.system() == 'Linux':
+        lib = glob.glob(r'/usr/lib/**/libvulkan*')
+        lib64 = glob.glob(r'/usr/lib64/**/libvulkan*')
+
+    if platform.system() == 'Windows':
+        lib = glob.glob(r'c:\Windows\System32\**\libvulkan*')
+        lib64 = glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*')
+        
+
+    if platform.system() == 'Darwin':
+        lib = glob.glob(r'/usr/local/lib/**/libvulkan*')
+        lib64 = glob.glob(r'/usr/local/lib64/**/libvulkan*')
+
+        
     # dr = ncnn.DataReaderFromEmpty()
 
     # with ncnn.Net() as net:

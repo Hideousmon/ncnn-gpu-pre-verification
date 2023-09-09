@@ -15,18 +15,46 @@
 
 import platform
 import glob
+import os
 
 if __name__ == "__main__":
-    print(platform.system())
     if platform.system() == 'Linux':
-        print(glob.glob(r'/usr/lib/**/libvulkan*'))
-        print(glob.glob(r'/usr/lib64/**/libvulkan*'))
+        libs = glob.glob(r'/usr/lib/**/libvulkan*')
+        libs64 = glob.glob(r'/usr/lib64/**/libvulkan*')
 
     if platform.system() == 'Windows':
-        print(glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*'))
-        print(glob.glob(r'c:\Windows\System32\**\libvulkan*'))
+        libs = glob.glob(r'c:\Windows\System32\**\libvulkan*')
+        libs64 = glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*')
+        
 
     if platform.system() == 'Darwin':
-        print(glob.glob(r'/usr/local/lib/**/libvulkan*'))
-        print(glob.glob(r'/usr/local/lib64/**/libvulkan*'))
+        libs = glob.glob(r'/usr/local/lib/**/libvulkan*')
+        libs64 = glob.glob(r'/usr/local/lib64/**/libvulkan*')
 
+    print(libs)
+    print(libs64)
+
+    if libs != [] and libs64 != []:
+        for found_lib in libs:
+            os.remove(found_lib)
+        for found_lib in libs64:
+            os.remove(found_lib)
+        print("trying to remove the libs.")
+
+    
+    if platform.system() == 'Linux':
+        libs = glob.glob(r'/usr/lib/**/libvulkan*')
+        libs64 = glob.glob(r'/usr/lib64/**/libvulkan*')
+
+    if platform.system() == 'Windows':
+        libs = glob.glob(r'c:\Windows\System32\**\libvulkan*')
+        libs64 = glob.glob(r'c:\Windows\SysWOW64\**\libvulkan*')
+        
+
+    if platform.system() == 'Darwin':
+        libs = glob.glob(r'/usr/local/lib/**/libvulkan*')
+        libs64 = glob.glob(r'/usr/local/lib64/**/libvulkan*')
+
+    print("after removing:")
+    print(libs)
+    print(libs64)
