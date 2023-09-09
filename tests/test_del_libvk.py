@@ -16,6 +16,7 @@
 import platform
 import glob
 import os
+import ncnn
 
 if __name__ == "__main__":
     if platform.system() == 'Linux':
