@@ -50,10 +50,15 @@ jobs:
           pip install pytest
 
       - name: test with pytest
+        if: matrix.os == 'ubuntu-20.04'
         run: |
-          sudo pytest tests/test_net_withoutvk.py
+          sudo python tests/test_del_libvk.py
+          pytest tests/test_net_withoutvk.py
 
-      # - name: test del libvulkan
-      #   run: |
-      #     sudo python tests/test_del_libvk.py
+      - name: test with pytest
+        if: matrix.os != 'ubuntu-20.04'
+        run: |
+          python tests/test_del_libvk.py
+          pytest tests/test_net_withoutvk.py
+
       
