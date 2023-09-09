@@ -36,6 +36,10 @@ if __name__ == "__main__":
 
     if libs != [] or libs64 != []:
         for found_lib in libs:
+            try:
+                os.chmod(found_lib, 0o777)
+            except:
+                raise Warning("can not change the permission mode.")
             os.remove(found_lib)
         for found_lib in libs64:
             os.remove(found_lib)
