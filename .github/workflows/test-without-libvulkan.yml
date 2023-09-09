@@ -38,6 +38,8 @@ jobs:
       - name: Setup VS2019
         if: matrix.os == 'windows-2019'
         uses: warrenbuckley/Setup-MSBuild@v1
+        with:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS=true
 
       - name: install ncnn for windows
         if: matrix.os == 'windows-2019'
