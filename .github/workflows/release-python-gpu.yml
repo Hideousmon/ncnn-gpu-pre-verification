@@ -139,7 +139,8 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-          CIBW_REPAIR_WHEEL_COMMAND: auditwheel repair -w {dest_dir} {wheel}
+          CIBW_BEFORE_BUILD: pip install delvewheel
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair {wheel}
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
