@@ -145,9 +145,8 @@ jobs:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: Build wheels for windows x86 and windows ARM64
-        if: (matrix.os == 'windows-2019' && matrix.arch == 'x86') || 
-            (matrix.os == 'windows-2019' && matrix.arch == 'ARM64')
+      - name: Build wheels for windows x86
+        if: matrix.os == 'windows-2019' && matrix.arch == 'x86'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -164,11 +163,33 @@ jobs:
                            cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
                            mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
-                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
-                            
-                           
-                           
-                           
+                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"            
+          CIBW_BEFORE_BUILD: pip install delvewheel
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
+
+      - name: Build wheels for windows ARM64
+        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
+                            LD_LIBRARY_PATH=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
+                            Vulkan_LIBRARY=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib
+          CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+                           cd Vulkan-Loader && mkdir build && cd build &&
+                           python3 ../scripts/update_deps.py --dir ../external --arch 64 --config debug &&
+                           cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
+                           cmake --build . &&
+                           mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
+                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"            
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
         with:
@@ -220,7 +241,8 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
+                            LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader 
           CIBW_BEFORE_ALL: yum -y install libXrandr-devel &&
                            git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
