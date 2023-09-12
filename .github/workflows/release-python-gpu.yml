@@ -179,7 +179,6 @@ jobs:
                            cd Vulkan-Headers &&
                            ln -s ../loader lib &&
                            export VULKAN_SDK=$(pwd)
-
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
