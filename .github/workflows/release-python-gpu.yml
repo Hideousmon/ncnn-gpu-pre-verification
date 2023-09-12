@@ -57,7 +57,7 @@ jobs:
           # - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
           - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } 
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } 
-          # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } 
+          - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } 
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
@@ -159,8 +159,8 @@ jobs:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: Build wheels for i686 test
-        if: matrix.arch == 'i686' 
+      - name: Build wheels for i686 manylinux
+        if: atrix.os == 'ubuntu-20.04' && matrix.arch == 'i686'  &&  matrix.build != 'cp*-musllinux*'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
