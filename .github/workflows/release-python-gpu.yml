@@ -163,7 +163,7 @@ jobs:
                            python3 ..\scripts\update_deps.py --dir ./ --arch x86 --config debug &&
                            cmake -C ..\external\helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
-                           xcopy "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
+                           xcopy "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/*"
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers/lib" /s /e /h
                            
                            
