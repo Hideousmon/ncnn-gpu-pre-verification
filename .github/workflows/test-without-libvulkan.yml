@@ -2,7 +2,7 @@ name: test-without-libvulkan
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     # tags:
     #   - '*'
 
