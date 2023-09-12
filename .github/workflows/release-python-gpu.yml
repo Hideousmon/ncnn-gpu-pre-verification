@@ -169,7 +169,7 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-          CIBW_BEFORE_ALL: apt install libxrandr-dev &&
+          CIBW_BEFORE_ALL: yum install libxrandr-dev &&
                            git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
