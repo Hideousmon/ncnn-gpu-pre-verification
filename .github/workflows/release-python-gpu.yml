@@ -162,7 +162,7 @@ jobs:
                            cd Vulkan-Loader && mkdir build && cd build &&
                            cmake -DUPDATE_DEPS=On -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
                            cmake --build . &&
-                           xcopy "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/" 
+                           xcopy "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/*" 
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/loader" /e /i &&
                            mklink "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/loader"
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/Vulkan-Headers/lib"
