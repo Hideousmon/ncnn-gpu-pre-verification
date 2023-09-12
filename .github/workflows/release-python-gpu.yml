@@ -200,8 +200,9 @@ jobs:
                            ../scripts/update_deps.py &&
                            cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
                            make -j$(nproc) &&
-                           cd Vulkan-Headers &&
-                           ln -s ../loader lib 
+                           New-Item -ItemType SymbolicLink
+                           - Path "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/loader"
+                           - Target "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/Vulkan-Headers/lib"
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
