@@ -145,7 +145,7 @@ jobs:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
 
-    - name: Build wheels for windows x86
+      - name: Build wheels for windows x86
         if: matrix.os == 'windows-2019' && matrix.arch == 'x86'
         uses: pypa/cibuildwheel@v2.15.0
         env:
@@ -156,11 +156,11 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: yum -y install libXrandr-devel &&
-                           git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-                           cd Vulkan-Loader && mkdir build && cd build &&
-                           ../scripts/update_deps.py &&
-                           cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
-                           make -j2
+                          git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+                          cd Vulkan-Loader && mkdir build && cd build &&
+                          ../scripts/update_deps.py &&
+                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
+                          make -j2
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
