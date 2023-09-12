@@ -159,8 +159,7 @@ jobs:
                             LD_LIBRARY_PATH=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
-                           python3 ../scripts/update_deps.py &&
-                           cmake -C helper.cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
+                           cmake -DUPDATE_DEPS=On -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
                            cmake --build .
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
