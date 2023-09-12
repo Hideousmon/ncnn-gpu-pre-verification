@@ -163,8 +163,9 @@ jobs:
                            python3 ..\scripts\update_deps.py --dir ..\external --arch x86 --config debug &&
                            cmake -C ..\external\helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
-                           mklink /D "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
-                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/loader"
+                           mklink /D "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/loader"
+                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
+                           
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
         with:
