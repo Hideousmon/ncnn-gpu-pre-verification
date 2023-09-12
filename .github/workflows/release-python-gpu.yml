@@ -156,15 +156,17 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-                            VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
-                            LD_LIBRARY_PATH=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/loader
+                            VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers
+                            LD_LIBRARY_PATH=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
-                           python3 ..\scripts\update_deps.py --dir ..\external --arch x86 --config debug &&
+                           python3 ..\scripts\update_deps.py --dir ./ --arch x86 --config debug &&
                            cmake -C ..\external\helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
-                           mklink /D "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/loader"
-                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
+                           xcopy "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
+                           "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers/lib" /s /e /h
+                           
+                           
                            
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
