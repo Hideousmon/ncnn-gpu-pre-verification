@@ -160,7 +160,7 @@ jobs:
                             LD_LIBRARY_PATH=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
-                           cmake -DUPDATE_DEPS=On -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
+                           cmake -DUPDATE_DEPS=On -DCMAKE_BUILD_TYPE=Debug -DVULKAN_HEADERS_INSTALL_DIR=$(PWD)/Vulkan-Headers/build/install .. &&
                            cmake --build . &&
                            mklink /D "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Release/Vulkan-Headers/lib"
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
