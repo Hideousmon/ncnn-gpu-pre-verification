@@ -58,13 +58,13 @@ jobs:
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } 
           # - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } 
           # - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } 
-          # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
+          - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
           # - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
+          # - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
     steps:
@@ -261,6 +261,7 @@ jobs:
       - name: Build wheels for macos test
         if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
             (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
+
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
