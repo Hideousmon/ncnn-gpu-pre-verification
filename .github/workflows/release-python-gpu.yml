@@ -155,15 +155,15 @@ jobs:
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT_WINDOWS: >
-                            PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\external\\Vulkan-Headers\\lib;D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader;$PATH"
+                            PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\external\\Vulkan-Headers\\build\\install\\lib;D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader;$PATH"
                             CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
                             VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            python3 ../scripts/update_deps.py --dir ../external --arch ${{ matrix.arch }} --config debug &&
-                           cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug  -DCMAKE_INSTALL_PREFIX=install .. &&
+                           cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
-                           mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
+                           mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
 
           CIBW_BEFORE_BUILD: pip install delvewheel
