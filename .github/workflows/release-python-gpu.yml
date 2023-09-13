@@ -187,7 +187,7 @@ jobs:
                             VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
-                           python3 ../scripts/update_deps.py --dir ../external --arch '64' --config debug &&
+                           python3 ../scripts/update_deps.py --dir ../external --arch 64 --config debug &&
                            cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
                            mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
