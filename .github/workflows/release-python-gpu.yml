@@ -342,10 +342,10 @@ jobs:
         platforms: all
 
     - name: Build wheels for manylinux
-      if: (build != 'cp36-musllinux*') && (build != 'cp37-musllinux*') &&
-          (build != 'cp38-musllinux*') && (build != 'cp39-musllinux*') &&
-          (build != 'cp310-musllinux*') && (build != 'cp311-musllinux*') &&
-          (build != 'cp312-musllinux*')
+      if: (matrix.build != 'cp36-musllinux*') && (matrix.build != 'cp37-musllinux*') &&
+          (matrix.build != 'cp38-musllinux*') && (matrix.build != 'cp39-musllinux*') &&
+          (matrix.build != 'cp310-musllinux*') && (matrix.build != 'cp311-musllinux*') &&
+          (matrix.build != 'cp312-musllinux*')
       uses: pypa/cibuildwheel@v2.15.0
       env:
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
@@ -367,10 +367,10 @@ jobs:
 
 
     - name: Build wheels for musllinux
-      if: (build == 'cp36-musllinux*') || (build == 'cp37-musllinux*') ||
-          (build == 'cp38-musllinux*') || (build == 'cp39-musllinux*') ||
-          (build == 'cp310-musllinux*') || (build == 'cp311-musllinux*') ||
-          (build == 'cp312-musllinux*')
+      if: (matrix.build == 'cp36-musllinux*') || (matrix.build == 'cp37-musllinux*') ||
+          (matrix.build == 'cp38-musllinux*') || (matrix.build == 'cp39-musllinux*') ||
+          (matrix.build == 'cp310-musllinux*') || (matrix.build == 'cp311-musllinux*') ||
+          (matrix.build == 'cp312-musllinux*')
       uses: pypa/cibuildwheel@v2.15.0
       env:
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
