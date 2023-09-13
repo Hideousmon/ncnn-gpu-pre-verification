@@ -268,7 +268,9 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers DYLD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            VULKAN_SDK=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers 
+                            DYLD_LIBRARY_PATH=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
