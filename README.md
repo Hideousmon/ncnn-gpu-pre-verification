@@ -3,9 +3,9 @@
 
 |                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 |
 | :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: |
-| ubuntu (cp-manylinux) |   √    | cpu  |  -   |   -   |   -   |     -      |
-| ubuntu (cp-musllinux) |  cpu   | cpu  |  -   |   -   |   -   |     -      |
-|      ubuntu (pp)      |   √    | cpu  |  -   |   -   |   -   |     -      |
+| ubuntu (cp-manylinux) |   √    |  √   |  -   |   -   |   -   |     -      |
+| ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      |
+|      ubuntu (pp)      |   √    |  √   |  -   |   -   |   -   |     -      |
 |     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      |
 |     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      |
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      |

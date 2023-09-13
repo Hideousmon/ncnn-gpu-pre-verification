@@ -1,5 +1,3 @@
-[toc]
-
 ### 1. libvulkan库无法找到时是否可用的验证 √
 
 > libvulkan库无法找到时依然可用的依据：
@@ -30,65 +28,36 @@
 
 ### 3. 部分平台架构无法顺利编译带Vulkan版本，问题记录
 
-#### a. Musllinux
-
-> 报错位置：repair built wheel过程
->
-> 报错：ValueError: Cannot repair wheel, because required library "libpthread.so.0" could not be located 或 ValueError: Cannot repair wheel, because required library "libm.so.6" could not be located
-
-尝试解决过程记录：
-
-在cibuildwheel的容器中先执行apk add libc6-compat，依旧报错：
-
-ValueError: Cannot repair wheel, because required library "libdl.so.2" could not be located
-
-问题思考：
-
-可能是Musl C库缺失的东西有点多？
-
-#### b. i686架构-Ubuntu
-
-> 报错位置：编译连接生成wheel过程
->
-> 报错： /opt/rh/devtoolset-10/root/usr/libexec/gcc/i686-redhat-linux/10/ld: /project/ncnn-python-gpu/1.2.189.0/x86_64/lib/libvulkan.so: error adding symbols: file in wrong format
-
-问题思考：
-
-vulkan sdk官网Linux版本似乎只支持x86_64，在i686上会出问题。或许可以尝试源码编译vulkan？
-
-#### c. x86架构-Windows
+#### a. x86架构-Windows
 
 > 报错位置：编译连接生成wheel过程
 >
 > 报错：ncnn.lib(allocator.obj) : error LNK2001: unresolved external symbol *** [D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\ncnn-python-gpu\build\temp.win32-3.6\Release\python\pyncnn.vcxproj] 
 
-问题思考：
+尝试解决：
 
-不清楚报错的原理，没有什么解决思路。
+在src/CMakeLists.txt-291行中增加：
 
-#### d. ARM64架构-Windows
+```
+if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        # Link directory for vulkan-1
+        target_link_libraries(ncnn PUBLIC ${Vulkan_LIBRARIES})
+    endif()
+```
+
+依旧报相同错误。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
+
+#### b. ARM64架构-Windows
 
 > 报错位置：编译连接生成wheel过程
 >
 > 报错：ncnn.lib(allocator.obj) : error LNK2001: unresolved external symbol *** [D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\ncnn-python-gpu\build\temp.win-arm64-cpython-39\Release\python\pyncnn.vcxproj]
 
-问题思考：
+尝试解决：
 
-不清楚报错的原理，没有什么解决思路。
+与x86-Windows相同。
 
-#### e. ARM64架构-MacOS
-
-> 报错位置：repair built wheel过程
->
-> 报错：Required arch arm64 missing from ncnn/ncnn.cpython-38-darwin.so
->
-> [ncnn-vulkan对此架构没有进行repair的过程，故其实生成的wheel可能存在问题]
-
-问题思考：
-
-不清楚报错的原理，没有什么解决思路。
-
-#### f. Universal2架构-MacOS
+#### c. ARM64架构-MacOS
 
 > 报错位置：repair built wheel过程
 >
@@ -98,9 +67,21 @@ vulkan sdk官网Linux版本似乎只支持x86_64，在i686上会出问题。或�
 
 问题思考：
 
-不清楚报错的原理，没有什么解决思路。
+不清楚报错的原理，没有什么解决思路。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
 
-#### g. 对上述架构暂时保持cpu版本
+#### d. Universal2架构-MacOS
+
+> 报错位置：repair built wheel过程
+>
+> 报错：Required arch arm64 missing from ncnn/ncnn.cpython-38-darwin.so
+>
+> [ncnn-vulkan对此架构没有进行repair的过程，故其实生成的wheel可能存在问题]
+
+问题思考：
+
+不清楚报错的原理，没有什么解决思路。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
+
+#### e. 对上述架构暂时保持cpu版本
 
 ### 4. Forked ncnn 编译全部wheels验证 √
 
