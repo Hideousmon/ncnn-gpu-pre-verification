@@ -1,4 +1,7 @@
+
+
 # ncnn-gpu-pre-verification
+
 ### Current ncnn-gpu wheels matrix 
 
 |                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 |
@@ -10,6 +13,19 @@
 |     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      |
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      |
 |      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     |
+
+
+
+
+|              | aarch64 | ppc64le | s390 |
+| :----------: | :-----: | :-----: | :--: |
+| cp-manylinux |    √    |    √    |  √   |
+| cp-musllinux |    √    |    √    |  √   |
+|      pp      |    √    |    -    |  -   |
+
+
+
+
 
 ### yolov4-tiny inference on windows  (without installing vulkan sdk)
 
