@@ -304,21 +304,20 @@ jobs:
       fail-fast: false
       matrix:
         arch: [aarch64, ppc64le, s390x]
-        build_manylinux: ['cp36-manylinux*', 'cp37-manylinux*', 'cp38-manylinux*',
-                          'cp39-manylinux*', 'cp310-manylinux*', 'cp311-manylinux*',
-                          'cp312-manylinux*']
-        build_musllinux: ['cp36-musllinux*', 'cp37-musllinux*', 'cp38-musllinux*',
-                          'cp39-musllinux*', 'cp310-musllinux*', 'cp311-musllinux*',
-                          'cp312-musllinux*']
+        build: ['cp36-manylinux*',  'cp37-manylinux*',  'cp38-manylinux*',
+                'cp39-manylinux*',  'cp310-manylinux*', 'cp311-manylinux*',
+                'cp312-manylinux*', 'cp36-musllinux*',  'cp37-musllinux*', 
+                'cp38-musllinux*',  'cp39-musllinux*',  'cp310-musllinux*',
+                'cp311-musllinux*', 'cp312-musllinux*']
         include:
           - arch: aarch64
-            build_manylinux: 'pp37-*'
+            build: 'pp37-*'
           - arch: aarch64
-            build_manylinux: 'pp38-*'
+            build: 'pp38-*'
           - arch: aarch64
-            build_manylinux: 'pp39-*'
+            build: 'pp39-*'
           - arch: aarch64
-            build_manylinux: 'pp310-*'
+            build: 'pp310-*'
 
     steps:
     - uses: actions/checkout@v4
@@ -343,10 +342,14 @@ jobs:
         platforms: all
 
     - name: Build wheels for manylinux
+      if: (build != 'cp36-musllinux*') && (build != 'cp37-musllinux*') &&
+          (build != 'cp38-musllinux*') && (build != 'cp39-musllinux*') &&
+          (build != 'cp310-musllinux*') && (build != 'cp311-musllinux*') &&
+          (build != 'cp312-musllinux*')
       uses: pypa/cibuildwheel@v2.15.0
       env:
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-          CIBW_BUILD: ${{ matrix.build_manylinux }}
+          CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
                             LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader 
@@ -364,11 +367,13 @@ jobs:
 
 
     - name: Build wheels for musllinux
+    if: (build == 'cp36-musllinux*') || (build == 'cp37-musllinux*') ||
+        (build == 'cp38-musllinux*') || (build == 'cp39-musllinux*') ||
+        (build == 'cp310-musllinux*') || (build == 'cp311-musllinux*') ||
+        (build == 'cp312-musllinux*')
       uses: pypa/cibuildwheel@v2.15.0
       env:
-          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
