@@ -61,10 +61,10 @@ jobs:
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
+          # - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          # - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
+          - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
     steps:
@@ -258,7 +258,7 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: Build wheels for cpu only now
+      - name: Build wheels for macos test
         if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
             (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
         uses: pypa/cibuildwheel@v2.15.0
@@ -268,7 +268,15 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers DYLD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
+          CIBW_BEFORE_ALL: apk add libxrandr-dev && 
+                           git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+                           cd Vulkan-Loader && mkdir build && cd build &&
+                           ../scripts/update_deps.py &&
+                           cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+                           make -j$(nproc) &&
+                           cd Vulkan-Headers &&
+                           ln -s ../loader lib 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
