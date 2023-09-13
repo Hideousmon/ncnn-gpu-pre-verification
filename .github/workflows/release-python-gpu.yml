@@ -162,7 +162,7 @@ jobs:
                            python3 ../scripts/update_deps.py --dir ../external --arch ${{ matrix.arch }} --config debug &&
                            cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
                            cmake --build . &&
-                          #  env:Path += ';D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader' &&
+                           #  env:Path += ';D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader' &&
                            mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/lib"
                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader"
 
