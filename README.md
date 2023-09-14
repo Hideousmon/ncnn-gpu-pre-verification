@@ -36,5 +36,5 @@ can be found [here](https://github.com/Hideousmon/ncnn-gpu-pre-verification/blob
 - [ ] ~~build wheels on i686, x86, arm64, universal2 with vulkan~~.
 - [x] record the issues on x86, arm64, universal2.
 - [x] pytest without libvulkan.
-- [x] build wheels for i686, aarch64, ppc64le, s390 and musllinux.
+- [x] build wheels for i686, aarch64, ppc64le, s390x and musllinux.
 - [x] pull request to ncnn.
