@@ -8,347 +8,112 @@ on:
 
 
 jobs:
-  # build_sdist:
-  #     name: Build SDist
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #     - uses: actions/checkout@v4
-  #       with:
-  #         submodules: true
+  build_sdist:
+      name: Build SDist
+      runs-on: ubuntu-latest
+      steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
 
-  #     - name: init submodules
-  #       shell: bash
-  #       run: |
-  #         cd ncnn-python-gpu
-  #         git submodule update --init
-  #         cd python
-  #         git submodule update --init
+      - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
 
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: '3.x'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-  #     - name: Install deps
-  #       run: python -m pip install twine build
+      - name: Install deps
+        run: python -m pip install twine build
 
-  #     - name: Build SDist
-  #       run: |
-  #           cd ncnn-python-gpu
-  #           python -m build -s
+      - name: Build SDist
+        run: |
+            cd ncnn-python-gpu
+            python -m build -s
 
-  #     - name: Check metadata
-  #       run: |
-  #           cd ncnn-python-gpu
-  #           twine check dist/*
+      - name: Check metadata
+        run: |
+            cd ncnn-python-gpu
+            twine check dist/*
 
-  #     - uses: actions/upload-artifact@v3
-  #       with:
-  #         path: ncnn-python-gpu/dist/*.tar.gz
+      - uses: actions/upload-artifact@v3
+        with:
+          path: ncnn-python-gpu/dist/*.tar.gz
 
-  # build_wheels:
-  #   name: ${{ matrix.arch }} ${{ matrix.build }} on ${{ matrix.os }}
-  #   runs-on: ${{ matrix.os }}
-  #   strategy:
-  #     fail-fast: false
-  #     matrix:
-  #       include:
-  #         - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
-  #         - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
-  #         - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
-  #         - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } 
-  #         - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } 
-  #         - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } 
-  #         - { os: windows-2019, arch: x86,        build: 'cp*'            } 
-  #         - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
-  #         - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-  #         - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
-  #         - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
-  #         - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-  #         - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
-  #         - { os: macos-latest, arch: universal2, build: 'cp*'            } 
-
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #       with:
-  #         submodules: true
-      
-  #     - name: init submodules
-  #       shell: bash
-  #       run: |
-  #         cd ncnn-python-gpu
-  #         git submodule update --init
-  #         cd python
-  #         git submodule update --init
-
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: '3.x'
-
-  #     - name: brew uninstall libomp for macos
-  #       if: matrix.os == 'macos-latest'
-  #       run: |
-  #         brew uninstall --ignore-dependencies libomp
-
-  #     - name: prepare vulkan sdk for windows amd64 and macos x86_64
-  #       if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-  #           (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
-  #       uses: humbletim/setup-vulkan-sdk@v1.2.0
-  #       with:
-  #         vulkan-query-version: 1.2.189.0
-  #         vulkan-components: Vulkan-Headers, Vulkan-Loader
-  #         vulkan-use-cache: true
-      
-  #     - name: prepare vulkan sdk for ubuntu x86_64
-  #       if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*'
-  #       shell: bash
-  #       run: |
-  #         cd ncnn-python-gpu
-  #         wget https://sdk.lunarg.com/sdk/download/1.2.189.0/linux/vulkansdk-linux-x86_64-1.2.189.0.tar.gz?Human=true -O vulkansdk-linux-x86_64-1.2.189.0.tar.gz
-  #         tar -xf vulkansdk-linux-x86_64-1.2.189.0.tar.gz
-
-  #     - id: verify-vulkan
-  #       if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-  #           (matrix.os == 'macos-latest' && matrix.arch == 'x86_64') 
-  #       name: verify vulkan sdk install for windows amd64 and macos x86_64
-  #       shell: bash
-  #       run: |
-  #         echo "VULKAN_SDK_VERSION='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
-  #         echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
-
-  #     - name: Build wheels for ubuntu x86_64 manylinux 
-  #       if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'x86_64' &&  matrix.build != 'cp*-musllinux*'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/ncnn-python-gpu/1.2.189.0/x86_64 
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for windows amd64
-  #       if: matrix.os == 'windows-2019' && matrix.arch == 'AMD64'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-  #         CIBW_BEFORE_BUILD: pip install delvewheel
-  #         CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
-  #       with:
-  #         package-dir: ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for windows x86
-  #       if: matrix.os == 'windows-2019' && matrix.arch == 'x86'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT_WINDOWS: >
-  #                           PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
-  #                           CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-  #                           VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
-  #         CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-  #                          cd Vulkan-Loader && mkdir build && cd build &&
-  #                          python3 ../scripts/update_deps.py --dir ../external --arch ${{ matrix.arch }} --config debug &&
-  #                          cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
-  #                          cmake --build . &&
-  #                          mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
-  #                          "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
-
-  #         CIBW_BEFORE_BUILD: pip install delvewheel
-  #         CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for windows ARM64
-  #       if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT_WINDOWS: >
-  #                           PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
-  #                           CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-  #                           VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
-  #         CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-  #                          cd Vulkan-Loader && mkdir build && cd build &&
-  #                          python3 ../scripts/update_deps.py --dir ../external --arch 64 --config debug &&
-  #                          cmake -C ../external/helper.cmake -DCMAKE_BUILD_TYPE=Debug .. &&
-  #                          cmake --build . &&
-  #                          mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
-  #                          "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
-
-  #         CIBW_BEFORE_BUILD: pip install delvewheel
-  #         CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for macos x86_64
-  #       if: matrix.os == 'macos-latest' && matrix.arch == 'x86_64'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-  #       with:
-  #         package-dir: ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for ubuntu musllinux
-  #       if: matrix.os == 'ubuntu-20.04' && matrix.build == 'cp*-musllinux*'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
-  #         CIBW_BEFORE_ALL: apk add libxrandr-dev && 
-  #                          git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-  #                          cd Vulkan-Loader && mkdir build && cd build &&
-  #                          ../scripts/update_deps.py &&
-  #                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
-  #                          make -j$(nproc) &&
-  #                          cd Vulkan-Headers &&
-  #                          ln -s ../loader lib 
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for ubuntu i686 manylinux
-  #       if: matrix.os == 'ubuntu-20.04' && matrix.arch == 'i686'  &&  matrix.build != 'cp*-musllinux*'
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
-  #                           LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader 
-  #         CIBW_BEFORE_ALL: yum -y install libXrandr-devel &&
-  #                          git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-  #                          cd Vulkan-Loader && mkdir build && cd build &&
-  #                          ../scripts/update_deps.py &&
-  #                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
-  #                          make -j$(nproc) &&
-  #                          cd Vulkan-Headers &&
-  #                          ln -s ../loader lib 
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Build wheels for macos test
-  #       if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
-  #           (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
-
-  #       uses: pypa/cibuildwheel@v2.15.0
-  #       env:
-  #         CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-  #         CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-  #         CIBW_BUILD: ${{ matrix.build }}
-  #         CIBW_BUILD_VERBOSITY: 1
-  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-  #                           VULKAN_SDK=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers 
-  #                           DYLD_LIBRARY_PATH=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
-  #         CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-  #                          cd Vulkan-Loader && mkdir build && cd build &&
-  #                          ../scripts/update_deps.py &&
-  #                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
-  #                          make -j$(nproc) &&
-  #                          cd Vulkan-Headers &&
-  #                          ln -s ../loader lib 
-  #       with:
-  #         package-dir: ./ncnn-python-gpu
-  #         output-dir: wheelhouse
-
-  #     - name: Show files
-  #       run: ls -lh wheelhouse
-  #       shell: bash
-
-  #     - name: Verify clean directory
-  #       run: git diff --exit-code
-  #       shell: bash
-
-  #     - name: Upload wheels
-  #       uses: actions/upload-artifact@v3
-  #       with:
-  #         path: wheelhouse/*.whl
-
-  build_wheels_qemu:
-    name: ${{ matrix.arch }} ${{ matrix.build }}
-    runs-on: ubuntu-20.04
-
+  build_wheels:
+    name: ${{ matrix.arch }} ${{ matrix.build }} on ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        arch: [aarch64, ppc64le, s390x]
-        build: ['cp36-manylinux*',  'cp37-manylinux*',  'cp38-manylinux*',
-                'cp39-manylinux*',  'cp310-manylinux*', 'cp311-manylinux*',
-                'cp312-manylinux*', 'cp36-musllinux*',  'cp37-musllinux*', 
-                'cp38-musllinux*',  'cp39-musllinux*',  'cp310-musllinux*',
-                'cp311-musllinux*', 'cp312-musllinux*']
         include:
-          - arch: aarch64
-            build: 'pp37-*'
-          - arch: aarch64
-            build: 'pp38-*'
-          - arch: aarch64
-            build: 'pp39-*'
-          - arch: aarch64
-            build: 'pp310-*'
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-manylinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'cp*-musllinux*' }
+          - { os: ubuntu-20.04, arch: x86_64,     build: 'pp*'            }
+          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-manylinux*' } 
+          - { os: ubuntu-20.04, arch: i686,       build: 'cp*-musllinux*' } 
+          - { os: ubuntu-20.04, arch: i686,       build: 'pp*'            } 
+          - { os: windows-2019, arch: x86,        build: 'cp*'            } 
+          - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
+          - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
+          - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
+          - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
+          - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
+          - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
+          - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
     steps:
-    - uses: actions/checkout@v4
-      with:
-        submodules: true
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      
+      - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
 
-    - name: init submodules
-      shell: bash
-      run: |
-        cd ncnn-python-gpu
-        git submodule update --init
-        cd python
-        git submodule update --init
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: brew uninstall libomp for macos
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew uninstall --ignore-dependencies libomp
 
-    - name: Set up QEMU
-      uses: docker/setup-qemu-action@v2
-      with:
-        platforms: all
+      - name: prepare vulkan sdk for windows amd64 and macos x86_64
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64')
+        uses: humbletim/setup-vulkan-sdk@v1.2.0
+        with:
+          vulkan-query-version: 1.2.189.0
+          vulkan-components: Vulkan-Headers, Vulkan-Loader
+          vulkan-use-cache: true
 
-    - name: Build wheels for manylinux
-      if: (matrix.build != 'cp36-musllinux*') && (matrix.build != 'cp37-musllinux*') &&
-          (matrix.build != 'cp38-musllinux*') && (matrix.build != 'cp39-musllinux*') &&
-          (matrix.build != 'cp310-musllinux*') && (matrix.build != 'cp311-musllinux*') &&
-          (matrix.build != 'cp312-musllinux*')
-      uses: pypa/cibuildwheel@v2.15.0
-      env:
+      - id: verify-vulkan
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64') 
+        name: verify vulkan sdk install for windows amd64 and macos x86_64
+        shell: bash
+        run: |
+          echo "VULKAN_SDK_VERSION='$VULKAN_SDK_VERSION'" >> "$GITHUB_OUTPUT"
+          echo "VULKAN_SDK='$VULKAN_SDK'" >> "$GITHUB_OUTPUT"
+
+      - name: Build wheels for ubuntu manylinux
+        if: matrix.os == 'ubuntu-20.04'  &&  matrix.build != 'cp*-musllinux*'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
@@ -361,19 +126,17 @@ jobs:
                            make -j$(nproc) &&
                            cd Vulkan-Headers &&
                            ln -s ../loader lib 
-      with:
+        with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
-
-
-    - name: Build wheels for musllinux
-      if: (matrix.build == 'cp36-musllinux*') || (matrix.build == 'cp37-musllinux*') ||
-          (matrix.build == 'cp38-musllinux*') || (matrix.build == 'cp39-musllinux*') ||
-          (matrix.build == 'cp310-musllinux*') || (matrix.build == 'cp311-musllinux*') ||
-          (matrix.build == 'cp312-musllinux*')
-      uses: pypa/cibuildwheel@v2.15.0
-      env:
+      
+      - name: Build wheels for ubuntu musllinux
+        if: matrix.os == 'ubuntu-20.04' && matrix.build == 'cp*-musllinux*'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
           CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
@@ -385,21 +148,174 @@ jobs:
                            make -j$(nproc) &&
                            cd Vulkan-Headers &&
                            ln -s ../loader lib 
-      with:
+        with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
+      - name: Build wheels for windows amd64
+        if: matrix.os == 'windows-2019' && matrix.arch == 'AMD64'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_BEFORE_BUILD: pip install delvewheel
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
+        with:
+          package-dir: ncnn-python-gpu
+          output-dir: wheelhouse
 
-    - name: Show files
-      run: ls -lh wheelhouse
-      shell: bash
+      - name: Build wheels for macos x86_64
+        if: matrix.os == 'macos-latest' && matrix.arch == 'x86_64'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+        with:
+          package-dir: ncnn-python-gpu
+          output-dir: wheelhouse
 
-    - name: Verify clean directory
-      run: git diff --exit-code
-      shell: bash
+      - name: Build wheels for x86 windows arm64 windows (cpu only)
+        if: (matrix.os == 'windows-2019' && matrix.arch == 'X86') || 
+            (matrix.os == 'windows-2019' && matrix.arch == 'ARM64')
+            (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
-    - name: Upload wheels
-      uses: actions/upload-artifact@v3
-      with:
-        path: wheelhouse/*.whl
+      - name: Show files
+        run: ls -lh wheelhouse
+        shell: bash
+
+      - name: Verify clean directory
+        run: git diff --exit-code
+        shell: bash
+
+      - name: Upload wheels
+        uses: actions/upload-artifact@v3
+        with:
+          path: wheelhouse/*.whl
+
+  # build_wheels_qemu:
+  #   name: ${{ matrix.arch }} ${{ matrix.build }}
+  #   runs-on: ubuntu-20.04
+
+  #   strategy:
+  #     fail-fast: false
+  #     matrix:
+  #       arch: [aarch64, ppc64le, s390x]
+  #       build: ['cp36-manylinux*',  'cp37-manylinux*',  'cp38-manylinux*',
+  #               'cp39-manylinux*',  'cp310-manylinux*', 'cp311-manylinux*',
+  #               'cp312-manylinux*', 'cp36-musllinux*',  'cp37-musllinux*', 
+  #               'cp38-musllinux*',  'cp39-musllinux*',  'cp310-musllinux*',
+  #               'cp311-musllinux*', 'cp312-musllinux*']
+  #       include:
+  #         - arch: aarch64
+  #           build: 'pp37-*'
+  #         - arch: aarch64
+  #           build: 'pp38-*'
+  #         - arch: aarch64
+  #           build: 'pp39-*'
+  #         - arch: aarch64
+  #           build: 'pp310-*'
+
+  #   steps:
+  #   - uses: actions/checkout@v4
+  #     with:
+  #       submodules: true
+
+  #   - name: init submodules
+  #     shell: bash
+  #     run: |
+  #       cd ncnn-python-gpu
+  #       git submodule update --init
+  #       cd python
+  #       git submodule update --init
+
+  #   - uses: actions/setup-python@v4
+  #     with:
+  #       python-version: '3.x'
+
+  #   - name: Set up QEMU
+  #     uses: docker/setup-qemu-action@v2
+  #     with:
+  #       platforms: all
+
+  #   - name: Build wheels for manylinux
+  #     if: (matrix.build != 'cp36-musllinux*') && (matrix.build != 'cp37-musllinux*') &&
+  #         (matrix.build != 'cp38-musllinux*') && (matrix.build != 'cp39-musllinux*') &&
+  #         (matrix.build != 'cp310-musllinux*') && (matrix.build != 'cp311-musllinux*') &&
+  #         (matrix.build != 'cp312-musllinux*')
+  #     uses: pypa/cibuildwheel@v2.15.0
+  #     env:
+  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+  #         CIBW_BUILD: ${{ matrix.build }}
+  #         CIBW_BUILD_VERBOSITY: 1
+  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
+  #                           LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader 
+  #         CIBW_BEFORE_ALL: yum -y install libXrandr-devel &&
+  #                          git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+  #                          cd Vulkan-Loader && mkdir build && cd build &&
+  #                          ../scripts/update_deps.py &&
+  #                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+  #                          make -j$(nproc) &&
+  #                          cd Vulkan-Headers &&
+  #                          ln -s ../loader lib 
+  #     with:
+  #         package-dir: ./ncnn-python-gpu
+  #         output-dir: wheelhouse
+
+
+  #   - name: Build wheels for musllinux
+  #     if: (matrix.build == 'cp36-musllinux*') || (matrix.build == 'cp37-musllinux*') ||
+  #         (matrix.build == 'cp38-musllinux*') || (matrix.build == 'cp39-musllinux*') ||
+  #         (matrix.build == 'cp310-musllinux*') || (matrix.build == 'cp311-musllinux*') ||
+  #         (matrix.build == 'cp312-musllinux*')
+  #     uses: pypa/cibuildwheel@v2.15.0
+  #     env:
+  #         CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+  #         CIBW_BUILD: ${{ matrix.build }}
+  #         CIBW_BUILD_VERBOSITY: 1
+  #         CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
+  #         CIBW_BEFORE_ALL: apk add libxrandr-dev && 
+  #                          git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+  #                          cd Vulkan-Loader && mkdir build && cd build &&
+  #                          ../scripts/update_deps.py &&
+  #                          cmake -DCMAKE_BUILD_TYPE=Release -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+  #                          make -j$(nproc) &&
+  #                          cd Vulkan-Headers &&
+  #                          ln -s ../loader lib 
+  #     with:
+  #         package-dir: ./ncnn-python-gpu
+  #         output-dir: wheelhouse
+
+
+  #   - name: Show files
+  #     run: ls -lh wheelhouse
+  #     shell: bash
+
+  #   - name: Verify clean directory
+  #     run: git diff --exit-code
+  #     shell: bash
+
+  #   - name: Upload wheels
+  #     uses: actions/upload-artifact@v3
+  #     with:
+  #       path: wheelhouse/*.whl
         
