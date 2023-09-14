@@ -61,7 +61,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 可见[release test · Hideousmon/ncnn@43df385 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6182483110)。验证之后有将使用的Vulkan SDK(for Windows and MacOS)的query version 从1.2.189.0修改到latest，并进行了验证：[test latest · Hideousmon/ncnn-gpu-pre-verification@ea2425c (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6184440312/job/16788104314)。
 
-### 3. libvulkan库无法找到时是否可用的验证(20230910) √
+### 3. libvulkan库无法找到时是否可用的验证(20230914) √
 
 > libvulkan库无法找到时依然可用的依据：
 >
@@ -75,7 +75,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 验证结果：
 
-在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，结果可见[Update test-without-libvulkan.yml · Hideousmon/ncnn-gpu-pre-verification@cc24d88 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6135635910/job/16649585147)
+在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，最新的结果(20230914)可见[update wheels · Hideousmon/ncnn-gpu-pre-verification@b5dbf58 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6184598973/job/16788555563)
+
+
 
 ### 4. Windows系统cibuildwheel无默认repair wheel过程问题修复(20230910)  √
 
