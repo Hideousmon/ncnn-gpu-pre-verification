@@ -4,22 +4,15 @@
 
 ### Current ncnn wheels matrix 
 
-|                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 |
-| :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: |
-| ubuntu (cp-manylinux) |   √    |  √   |  -   |   -   |   -   |     -      |
-| ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      |
-|      ubuntu (pp)      |   √    |  √   |  -   |   -   |   -   |     -      |
-|     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      |
-|     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      |
-|      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      |
-|      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     |
-
-
-|              | aarch64 | ppc64le | s390 |
-| :----------: | :-----: | :-----: | :--: |
-| cp-manylinux |    √    |    √    |  √   |
-| cp-musllinux |    √    |    √    |  √   |
-|      pp      |    √    |    -    |  -   |
+|                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 | aarch64 | ppc64le | s390 |
+| :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: | :-------: | :-------: | :----: |
+| ubuntu (cp-manylinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
+| ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
+|      ubuntu (pp)      |   √    |  √   |  -   |   -   |   -   |     -      | √ | - | - |
+|     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      | - | - | - |
+|     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      | - | - | - |
+|      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      | - | - | - |
+|      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     | - | - | - |
 
 ### trouble shooting
 
