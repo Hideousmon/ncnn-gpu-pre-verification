@@ -59,7 +59,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 ### 2. Forked ncnn 编译全部wheels最新验证(20230914) √
 
-可见[release test · Hideousmon/ncnn@43df385 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6182483110)。
+可见[release test · Hideousmon/ncnn@43df385 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6182483110)。验证之后有将使用的Vulkan SDK(for Windows and MacOS)的query version 从1.2.189.0修改到latest，并进行了验证：[test latest · Hideousmon/ncnn-gpu-pre-verification@ea2425c (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6184440312/job/16788104314)。
 
 ### 3. libvulkan库无法找到时是否可用的验证(20230910) √
 
