@@ -4,7 +4,7 @@
 
 ### Current ncnn wheels matrix 
 
-|                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 | aarch64 | ppc64le | s390 |
+|                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 | aarch64 | ppc64le | s390x |
 | :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: | :-------: | :-------: | :----: |
 | ubuntu (cp-manylinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
 | ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
