@@ -2,7 +2,7 @@
 
 # ncnn-gpu-pre-verification
 
-### Current ncnn-gpu wheels matrix 
+### Current ncnn wheels matrix 
 
 |                       | x86_64 | i686 | x86  | AMD64 | ARM64 | universal2 |
 | :-------------------: | :----: | :--: | :--: | :---: | :---: | :--------: |
@@ -15,17 +15,15 @@
 |      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     |
 
 
-
-
 |              | aarch64 | ppc64le | s390 |
 | :----------: | :-----: | :-----: | :--: |
 | cp-manylinux |    √    |    √    |  √   |
 | cp-musllinux |    √    |    √    |  √   |
 |      pp      |    √    |    -    |  -   |
 
+### trouble shooting
 
-
-
+can be found [here](https://github.com/Hideousmon/ncnn-gpu-pre-verification/blob/main/troubleshooting.md). [in Chinese]
 
 ### yolov4-tiny inference on windows  (without installing vulkan sdk)
 
@@ -40,13 +38,10 @@
 |  C++   |  49.24ms   |     13.14ms      |
 | Python |  56.62ms   |     14.61ms      |
 
-### trouble shooting
-
-can be found [here](https://github.com/Hideousmon/ncnn-gpu-pre-verification/blob/main/troubleshooting.md). [in Chinese]
-
 ### TO DO
 
 - [ ] ~~build wheels on i686, x86, arm64, universal2 with vulkan~~.
-- [x] record the issues on i686, x86, arm64, universal2.
+- [x] record the issues on x86, arm64, universal2.
 - [x] pytest without libvulkan.
+- [x] build wheels for i686, aarch64, ppc64le, s390 and musllinux.
 - [x] pull request to ncnn.

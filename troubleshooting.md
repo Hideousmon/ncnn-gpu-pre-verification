@@ -83,7 +83,9 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 #### e. 对上述架构暂时保持cpu版本
 
-### 4. Forked ncnn 编译全部wheels验证 √
+一个猜测：根据cibuildwheel的工作方式描述[cibuildwheel/docs/data/how-it-works.png at main · pypa/cibuildwheel (github.com)](https://github.com/pypa/cibuildwheel/blob/main/docs/data/how-it-works.png) ，工作在x86_64(github actions runner使用的机器[About GitHub-hosted runners - GitHub Docs](https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners))上的Ubuntu系统会根据不同需求的架构创建容器，并在容器中进行编译，使用Vulkan-Loader之后就没有任何问题了；而同样工作在x86_64上的macOS、Windows系统则直接在原始系统上进行编译，所以对于x86_64及AMD64架构可以顺利完成，而arm64、x86、universal2可能在编译中存在某些检测系统架构出错进而导致最终的问题？
 
-可见[release test · Hideousmon/ncnn@03a13ba (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6135704955)。
+### 4. Forked ncnn 编译全部wheels最新验证(20230914) √
+
+可见[release test · Hideousmon/ncnn@43df385 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6182483110)。
 
