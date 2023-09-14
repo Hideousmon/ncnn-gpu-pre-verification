@@ -2,7 +2,7 @@ name: test-without-libvulkan
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     # tags:
     #   - '*'
 
@@ -32,21 +32,21 @@ jobs:
         if: matrix.os == 'ubuntu-20.04'
         shell: bash
         run: |
-          pip install built-wheels/ncnn-1.0.20230910-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+          pip install built-wheels/ncnn-1.0.20230914-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
           pip install pytest
 
       - name: install ncnn for windows
         if: matrix.os == 'windows-2019'
         shell: bash
         run: |
-          pip install built-wheels/ncnn-1.0.20230910-cp38-cp38-win_amd64.whl
+          pip install built-wheels/ncnn-1.0.20230914-cp38-cp38-win_amd64.whl
           pip install pytest
 
       - name: install ncnn for macos
         if: matrix.os == 'macos-latest'
         shell: bash
         run: |
-          pip install built-wheels/ncnn-1.0.20230910-cp38-cp38-macosx_10_9_x86_64.whl
+          pip install built-wheels/ncnn-1.0.20230914-cp38-cp38-macosx_10_9_x86_64.whl
           pip install pytest
 
       - name: test with pytest
