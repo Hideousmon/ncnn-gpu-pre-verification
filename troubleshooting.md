@@ -67,7 +67,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 问题思考：
 
-不清楚报错的原理，没有什么解决思路。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
+不清楚报错的原理，没有什么解决思路。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。如果取消repair built wheel过程可以完成生成wheel，但是不确定是否真的可用，故暂时先保持了仅支持cpu的版本。
 
 #### d. Universal2架构-MacOS
 
@@ -79,7 +79,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 
 问题思考：
 
-不清楚报错的原理，没有什么解决思路。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
+与arm64 -MacOS相同。
 
 #### e. 对上述架构暂时保持cpu版本
 
