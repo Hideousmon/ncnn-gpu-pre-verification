@@ -7,12 +7,11 @@ jobs:
   windows-build:
     name: windows image test
     runs-on: ubuntu-latest
-    container:
-      image: dockcross/windows-x86
-      volumes:
-        - my_docker_volume:/volume_mount
-        - /project/
-      options: --cpus 1
     steps:
-      - name: Check for dockerenv file
-        run: dir
+      - name: test hello world
+        run: |
+          git clone https://github.com/dockcross/dockcross.git
+          cd dockcross
+          docker run --rm dockcross/linux-armv7 > ./dockcross-linux-armv7
+          chmod +x ./dockcross-linux-armv7
+          ./dockcross-linux-armv7 bash -c '$CC test/C/hello.c -o hello_arm'
