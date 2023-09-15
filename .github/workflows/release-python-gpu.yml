@@ -61,28 +61,28 @@ jobs:
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
+          - { os: windows-latest, arch: ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
           # - { os: macos-latest, arch: x86_64 arm64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64 universal2, build: 'cp*'            } 
 
     steps:
-      # - uses: actions/checkout@v3
-      #   with:
-      #     submodules: true
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       
-      # - name: init submodules
-      #   shell: bash
-      #   run: |
-      #     cd ncnn-python-gpu
-      #     git submodule update --init
-      #     cd python
-      #     git submodule update --init
+      - name: init submodules
+        shell: bash
+        run: |
+          cd ncnn-python-gpu
+          git submodule update --init
+          cd python
+          git submodule update --init
 
-      # - uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.x'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
 
       - name: brew uninstall libomp for macos
         if: matrix.os == 'macos-latest'
@@ -209,41 +209,35 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: install test
-        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
-        shell: cmd
-        run: |
-          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1'))
+      - name: Build wheels for windows ARM64
+        if: matrix.os == 'windows-latest' && matrix.arch == 'ARM64'
+        uses: pypa/cibuildwheel@v2.15.0
+        env:
+          CIBW_ARCHS_MACOS: ${{ matrix.arch }}
+          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
+          CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
+          CIBW_BUILD: ${{ matrix.build }}
+          CIBW_BUILD_VERBOSITY: 1
+          CIBW_ENVIRONMENT_WINDOWS: >
+                            PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
+                            CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
+          CIBW_BEFORE_ALL:  git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+                            cd Vulkan-Loader && mkdir build && cd build &&
+                            python3 ../scripts/update_deps.py --dir ../external --config debug &&
+                            cmake -C ../external/helper.cmake -G "Visual Studio 16 2019" -A ARM64 -DCMAKE_BUILD_TYPE=Debug -DUSE_MASM=OFF ..  &&
+                            cmake --build . &&
+                            mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
+                            "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
-      # - name: Build wheels for windows ARM64
-      #   if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT_WINDOWS: >
-      #                       PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
-      #                       CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
-      #                       VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
-      #     CIBW_BEFORE_ALL:  git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-      #                       cd Vulkan-Loader && mkdir build && cd build &&
-      #                       python3 ../scripts/update_deps.py --dir ../external --config debug &&
-      #                       cmake -C ../external/helper.cmake -G "Visual Studio 16 2019" -A ARM64 -DCMAKE_BUILD_TYPE=Debug -DUSE_MASM=OFF ..  &&
-      #                       cmake --build . &&
-      #                       mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
-      #                       "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
-
-      #     CIBW_BEFORE_BUILD: pip install delvewheel
-      #     CIBW_REPAIR_WHEEL_COMMAND: Set-ExecutionPolicy Bypass -Scope Process -Force -RunAsAdmin;
-      #                     [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072 -RunAsAdmin;
-      #                     iex ((New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1')) -RunAsAdmin &&
-      #                     delvewheel repair -w {dest_dir} {wheel}
-      #   with:
-      #     package-dir: ./ncnn-python-gpu
-      #     output-dir: wheelhouse
+          CIBW_BEFORE_BUILD: pip install delvewheel
+          CIBW_REPAIR_WHEEL_COMMAND: Set-ExecutionPolicy Bypass -Scope Process -Force -RunAsAdmin;
+                          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072 -RunAsAdmin;
+                          iex ((New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1')) -RunAsAdmin &&
+                          delvewheel repair -w {dest_dir} {wheel}
+        with:
+          package-dir: ./ncnn-python-gpu
+          output-dir: wheelhouse
 
 
       - name: Build wheels for macos test
