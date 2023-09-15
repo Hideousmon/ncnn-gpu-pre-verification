@@ -9,12 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: dockcross/windows-x86
-      env:
-          NODE_ENV: development
-      ports:
-        - 80
       volumes:
         - my_docker_volume:/volume_mount
+        - /project/
       options: --cpus 1
     steps:
       - name: Check for dockerenv file
