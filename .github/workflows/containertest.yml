@@ -12,5 +12,5 @@ jobs:
         run: |
           docker pull dockcross/windows-shared-x86
           docker images
-          docker run dockcross/windows-shared-x86 systeminfo
+          docker exec -it dockcross/windows-shared-x86 powershell
           
