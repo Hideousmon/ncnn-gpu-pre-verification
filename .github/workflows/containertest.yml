@@ -12,5 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@main
       - name: run ls
-        run: ls
+        run: |
+          systeminfo
           
