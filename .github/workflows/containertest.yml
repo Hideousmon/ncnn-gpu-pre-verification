@@ -8,6 +8,8 @@ jobs:
     name: winget test
     runs-on: windows-2019
     steps:
+      - name: Install winget
+        uses: Cyberboss/install-winget@v1
       - name: test hello world
         run: |
           winget upgrade --all
