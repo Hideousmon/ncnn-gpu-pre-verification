@@ -211,10 +211,9 @@ jobs:
 
       - name: install test
         if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
-        shell: bash
+        shell: cmd
         run: |
-          (New-Object System.Net.WebClient).DownloadFile('https://vcredist.com/install.ps1')
-          ./install.ps1 -RunAsAdmin
+          Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1'))
 
       # - name: Build wheels for windows ARM64
       #   if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
