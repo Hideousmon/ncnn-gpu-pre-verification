@@ -257,9 +257,7 @@ jobs:
           CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
                             VULKAN_SDK=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers 
                             DYLD_LIBRARY_PATH=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
-          CIBW_BEFORE_ALL: brew uninstall cmake &&
-                           brew install cmake == 
-                           git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+          CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
                            cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64 -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
