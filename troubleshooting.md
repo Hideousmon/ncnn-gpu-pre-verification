@@ -8,7 +8,7 @@
 
 解决思路：
 
-根据一个久远的Vulkan-Loader Issue [Windows ARM64 support? · Issue #536 · KhronosGroup/Vulkan-Loader (github.com)](https://github.com/KhronosGroup/Vulkan-Loader/issues/536)
+
 
 #### c. ARM64架构-MacOS
 
