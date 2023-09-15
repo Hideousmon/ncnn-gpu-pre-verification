@@ -10,4 +10,6 @@ jobs:
     steps:
       - name: test hello world
         run: |
-          docker run hello-world
+          docker pull dockcross/windows-shared-x86
+          docker images
+          docker run windows-shared-x86 echo "hello from win x86"
