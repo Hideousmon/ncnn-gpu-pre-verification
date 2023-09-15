@@ -213,7 +213,7 @@ jobs:
         if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
         shell: bash
         run: |
-          (New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1')
+          (New-Object System.Net.WebClient).DownloadFile('https://vcredist.com/install.ps1')
           ./install.ps1 -RunAsAdmin
 
       # - name: Build wheels for windows ARM64
