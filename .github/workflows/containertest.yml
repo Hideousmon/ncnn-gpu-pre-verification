@@ -13,5 +13,5 @@ jobs:
           docker pull dockcross/windows-shared-x86
           docker images
           docker run dockcross/windows-shared-x86 echo "hello from win x86"
-          docker run -it busybox sh
+          docker run -it dockcross/windows-shared-x86 powershell.exe
           ls
