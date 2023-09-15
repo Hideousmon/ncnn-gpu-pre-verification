@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: test hello world
         run: |
-          docker pull dockcross/windows-shared-x86
+          docker pull mcr.microsoft.com/windows/nanoserver:ltsc2022
           docker images
-          docker run -it dockcross/windows-shared-x86 cmd.exe
+          docker run -it mcr.microsoft.com/windows/nanoserver:ltsc2022 cmd.exe
           
