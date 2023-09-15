@@ -15,5 +15,4 @@ jobs:
       options: --cpus 1
     steps:
       - name: Check for dockerenv file
-        shell: bash
-        run: ls
+        run: dir
