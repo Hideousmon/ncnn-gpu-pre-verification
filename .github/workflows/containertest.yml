@@ -12,6 +12,5 @@ jobs:
         run: |
           docker pull dockcross/windows-shared-x86
           docker images
-          docker run dockcross/windows-shared-x86 echo "hello from win x86"
-          docker run -it dockcross/windows-shared-x86 cmd.exe
-          dir
+          docker run dockcross/windows-shared-x86 ls 
+          
