@@ -7,10 +7,10 @@ jobs:
   windows-build:
     name: windows image test
     runs-on: ubuntu-latest
+    container:
+      image: dockcross/windows-shared-x86
     steps:
-      - name: test hello world
-        run: |
-          docker pull dockcross/windows-shared-x86
-          docker images
-          docker run dockcross/windows-shared-x86 ls 
+      - uses: actions/checkout@main
+      - name: run ls
+        run: ls
           
