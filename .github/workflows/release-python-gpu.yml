@@ -231,10 +231,7 @@ jobs:
                             "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
           CIBW_BEFORE_BUILD: pip install delvewheel
-          CIBW_REPAIR_WHEEL_COMMAND: Set-ExecutionPolicy Bypass -Scope Process -Force -RunAsAdmin;
-                          [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072 -RunAsAdmin;
-                          iex ((New-Object System.Net.WebClient).DownloadString('https://vcredist.com/install.ps1')) -RunAsAdmin &&
-                          delvewheel repair -w {dest_dir} {wheel}
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
