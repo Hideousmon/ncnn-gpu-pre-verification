@@ -10,7 +10,7 @@
 | ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
 |      ubuntu (pp)      |   √    |  √   |  -   |   -   |   -   |     -      | √ | - | - |
 |     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      | - | - | - |
-|     windows (cp)      |   -    |  -   | cpu  |   √   |  cpu  |     -      | - | - | - |
+|     windows (cp)      |   -    |  -   | √ |   √   |  cpu  |     -      | - | - | - |
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      | - | - | - |
 |      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     | - | - | - |
 

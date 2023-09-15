@@ -1,16 +1,14 @@
-name: container test
+name: windows test
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   windows-build:
-    name: windows image test
-    runs-on: ubuntu-latest
+    name: winget test
+    runs-on: windows-2019
     steps:
       - name: test hello world
         run: |
-          docker pull mcr.microsoft.com/windows/nanoserver:ltsc2022
-          docker images
-          docker run -it mcr.microsoft.com/windows/nanoserver:ltsc2022 cmd.exe
+          winget upgrade --all
           
