@@ -211,7 +211,7 @@ jobs:
 
 
       - name: Build wheels for windows ARM64
-        if: matrix.os == 'windows-latest' && matrix.arch == 'ARM64'
+        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
