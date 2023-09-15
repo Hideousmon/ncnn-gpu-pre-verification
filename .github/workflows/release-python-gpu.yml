@@ -61,7 +61,7 @@ jobs:
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
+          - { os: windows-2019, arch: AMD64 ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
           - { os: macos-latest, arch: x86_64 arm64,      build: 'cp*'            } 
@@ -209,14 +209,8 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
-      - name: add msvc for windows arm64
-        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
-        uses: ilammy/msvc-dev-cmd@v1
-        with: 
-          arch: amd64_arm64
-
       - name: Build wheels for windows ARM64
-        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
+        if: matrix.os == 'windows-2019' && matrix.arch == 'AMD64 ARM64'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -260,7 +254,7 @@ jobs:
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
-                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64 -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=x86_64 -DCMAKE_OSX_ARCHITECTURES=arm64 -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
                            make -j$(nproc) &&
                            cd Vulkan-Headers &&
                            ln -s ../loader lib 
