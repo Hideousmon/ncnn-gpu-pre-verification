@@ -1,22 +1,19 @@
-name: dockertest
-
-on:
-  push:
-    branches: [main]
+name: Redis Service Example
+on: push
 
 jobs:
-  helloworld:
-    name: 'Hello World'
-    inputs:
-      who-to-greet:  # id of input
-        description: 'Who to greet'
-        required: true
-        default: 'World'
-    outputs:
-      time: # id of output
-        description: 'The time we greeted you'
-    runs:
-      using: 'docker'
-      image: 'Dockerfile'
-      args:
-        - ${{ inputs.who-to-greet }}
+  # Label of the container job
+  runner-job:
+    # You must use a Linux environment when using service containers or container jobs
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `runner-job`
+    services:
+      # Label used to access the service container
+      redis:
+        # Docker Hub image
+        image: redis
+        #
+        ports:
+          # Opens tcp port 6379 on the host and service container
+          - 6379:6379
