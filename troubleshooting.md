@@ -1,33 +1,14 @@
 ### 1. 部分平台架构无法顺利编译带Vulkan版本，问题记录(20230914)
 
-#### a. x86架构-Windows
+#### a. ARM64架构-Windows
 
-> 报错位置：编译连接生成wheel过程
+> 报错位置：编译Vulkan-Loader过程
 >
-> 报错：ncnn.lib(allocator.obj) : error LNK2001: unresolved external symbol *** [D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\ncnn-python-gpu\build\temp.win32-3.6\Release\python\pyncnn.vcxproj] 
+> 报错：C:\Program Files (x86)\Microsoft Visual Studio\2019\Enterprise\MSBuild\Microsoft\VC\v160\Microsoft.CppCommon.targets(241,5): error MSB8066: Custom build for 'D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\Vulkan-Loader\build\CMakeFiles\ed49ee8a73e3c1795ec33caeaf1b16a7\gen_defines.asm.rule;D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\Vulkan-Loader\build\CMakeFiles\34d077b7282c1826b3ae7764a4fe9e49\loader_asm_gen_files.rule;D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\Vulkan-Loader\loader\CMakeLists.txt' exited with code 216. [D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\Vulkan-Loader\build\loader\loader_asm_gen_files.vcxproj]
 
-尝试解决：
+解决思路：
 
-在src/CMakeLists.txt-291行中增加：
-
-```
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-        # Link directory for vulkan-1
-        target_link_libraries(ncnn PUBLIC ${Vulkan_LIBRARIES})
-    endif()
-```
-
-依旧报相同错误。使用官网VULKAN-SDK以及编译的Vulkan-Loader结果相同。
-
-#### b. ARM64架构-Windows
-
-> 报错位置：编译连接生成wheel过程
->
-> 报错：ncnn.lib(allocator.obj) : error LNK2001: unresolved external symbol *** [D:\a\ncnn-gpu-pre-verification\ncnn-gpu-pre-verification\ncnn-python-gpu\build\temp.win-arm64-cpython-39\Release\python\pyncnn.vcxproj]
-
-尝试解决：
-
-与x86-Windows相同。
+根据一个久远的Vulkan-Loader Issue [Windows ARM64 support? · Issue #536 · KhronosGroup/Vulkan-Loader (github.com)](https://github.com/KhronosGroup/Vulkan-Loader/issues/536)
 
 #### c. ARM64架构-MacOS
 
