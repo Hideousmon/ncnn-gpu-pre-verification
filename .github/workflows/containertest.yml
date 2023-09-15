@@ -26,6 +26,11 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: add pipx path
+        shell: bash 
+        run: |
+          python3 -m pipx ensurepath --force
+
       - name: Build wheels for windows x86
         uses: pypa/cibuildwheel@v2.15.0
         env:
