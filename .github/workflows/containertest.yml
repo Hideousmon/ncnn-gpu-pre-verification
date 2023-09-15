@@ -5,7 +5,7 @@ on:
 
 jobs:
   windows-build:
-  name: windows image test
+    name: windows image test
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/windows/servercore:ltsc2019
