@@ -1,19 +1,16 @@
-name: Redis Service Example
-on: push
+name: container test
+on:
+  push:
+    branches: [main]
 
 jobs:
-  # Label of the container job
-  runner-job:
-    # You must use a Linux environment when using service containers or container jobs
+  windows-build:
+  name: windows image test
     runs-on: ubuntu-latest
-
-    # Service containers to run with `runner-job`
-    services:
-      # Label used to access the service container
-      redis:
-        # Docker Hub image
-        image: redis
-        #
-        ports:
-          # Opens tcp port 6379 on the host and service container
-          - 6379:6379
+    container:
+      image: mcr.microsoft.com/windows/servercore:ltsc2019
+    steps:
+      - name: ls test
+        shell: bash
+        run: |
+          ls
