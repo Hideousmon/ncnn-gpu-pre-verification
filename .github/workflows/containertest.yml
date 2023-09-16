@@ -11,7 +11,7 @@ jobs:
       - name: find mscvp
         shell: bash
         run: |
-          ls "c:/Windows/System32/"  | Select-String 'mscvp*'
+          ls -lh "c:/Windows/System32/"  
 
       - name: vc redist
         shell: powershell
@@ -24,4 +24,4 @@ jobs:
       - name: find mscvp
         shell: bash
         run: |
-          ls "c:/Windows/System32/"  | Select-String 'mscvp*'
+          ls -lh "c:/Windows/System32/" 
