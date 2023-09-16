@@ -230,8 +230,8 @@ jobs:
                             mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
                             "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
-          CIBW_BEFORE_BUILD: pip install delvewheel --add-path "c:/Windows/System32/" 
-          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
+          CIBW_BEFORE_BUILD: pip install delvewheel -
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} -add-path "c:/Windows/System32/" 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
@@ -253,7 +253,7 @@ jobs:
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
-                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="x86_64;arm64" -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
                            make -j$(nproc) &&
                            cd Vulkan-Headers &&
                            ln -s ../loader lib 
