@@ -5,7 +5,8 @@ on:
     branches: [main]
     # tags:
     #   - '*'
-
+env:
+  DEVELOPER_DIR: /Applications/Xcode_13.4.1.app/Contents/Developer
 
 jobs:
   # build_sdist:
@@ -327,23 +328,6 @@ jobs:
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
-
-      # - name: Build wheels for x86 windows arm64 windows arm64 macos universal2 macos(cpu only)
-      #   if: (matrix.os == 'windows-2019' && matrix.arch == 'X86')   || 
-      #       (matrix.os == 'windows-2019' && matrix.arch == 'ARM64') || 
-      #       (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
-      #       (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
-      #   uses: pypa/cibuildwheel@v2.15.0
-      #   env:
-      #     CIBW_ARCHS_MACOS: ${{ matrix.arch }}
-      #     CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-      #     CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
-      #     CIBW_BUILD: ${{ matrix.build }}
-      #     CIBW_BUILD_VERBOSITY: 1
-      #     CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=FALSE
-      #   with:
-      #     package-dir: ./ncnn-python-gpu
-      #     output-dir: wheelhouse
 
       - name: Show files
         run: ls -lh wheelhouse
