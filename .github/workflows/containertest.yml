@@ -12,4 +12,4 @@ jobs:
         shell: powershell
         run: |
           Install-Module -Name "VcRedist" -Force
-          
+          Install-VcRedist
