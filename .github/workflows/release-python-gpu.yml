@@ -64,8 +64,8 @@ jobs:
           - { os: windows-latest, arch: ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          # - { os: macos-latest, arch: x86_64 arm64,      build: 'cp*'            } 
-          # - { os: macos-latest, arch: x86_64 universal2, build: 'cp*'            } 
+          - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
+          - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
     steps:
       - uses: actions/checkout@v3
@@ -100,7 +100,7 @@ jobs:
 
       - id: verify-vulkan
         if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-            (matrix.os == 'macos-latest' ) 
+            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64') 
         name: verify vulkan sdk install for windows amd64 and macos
         shell: bash
         run: |
@@ -209,6 +209,15 @@ jobs:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
 
+      - name: add msvcp140.dll for windows arm64
+        if: matrix.os == 'windows-latest' && matrix.arch == 'ARM64'
+        shell: powershell
+        run: |
+          Install-Module -Name "VcRedist" -Force
+          Import-Module VcRedist
+          $VcList = Get-VcList | Get-VcRedist -Path "D:/"
+          $VcList | Install-VcRedist -Path D:/
+
       - name: Build wheels for windows ARM64
         if: matrix.os == 'windows-latest' && matrix.arch == 'ARM64'
         uses: pypa/cibuildwheel@v2.15.0
@@ -238,8 +247,8 @@ jobs:
 
 
       - name: Build wheels for macos test
-        if: (matrix.os == 'macos-latest' && matrix.arch == 'x86_64 arm64') || 
-            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64 universal2')
+        if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
+            (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -247,7 +256,16 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            VULKAN_SDK=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers 
+                            DYLD_LIBRARY_PATH=/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader
+          CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
+                           cd Vulkan-Loader && mkdir build && cd build &&
+                           ../scripts/update_deps.py &&
+                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+                           make -j$(nproc) &&
+                           cd Vulkan-Headers &&
+                           ln -s ../loader lib 
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
