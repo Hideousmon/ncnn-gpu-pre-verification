@@ -2,7 +2,7 @@ name: release-python-gpu
 
 on:
   push:
-    branches: [master]
+    branches: [main]
     # tags:
     #   - '*'
 
