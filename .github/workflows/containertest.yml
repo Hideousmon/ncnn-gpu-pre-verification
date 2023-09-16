@@ -11,7 +11,7 @@ jobs:
       - name: find mscvp
         shell: bash
         run: |
-          ls -l c:\Windows\System32\  | grep 'mscvp*'
+          ls -l "c:/Windows/System32/"  | grep 'mscvp*'
 
       - name: vc redist
         shell: powershell
@@ -24,5 +24,4 @@ jobs:
       - name: find mscvp
         shell: bash
         run: |
-          ls -l c:\Windows\System32\  | grep 'mscvp*'
-          
+          ls -l "c:/Windows/System32/"  | grep 'mscvp*'
