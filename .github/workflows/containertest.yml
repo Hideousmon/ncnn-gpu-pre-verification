@@ -13,5 +13,5 @@ jobs:
         run: |
           Install-Module -Name "VcRedist" -Force
           Import-Module VcRedist
-          $VcList = Get-VcList | Get-VcRedist -Path "D:\Temp\VcRedist"
-          $VcList | Install-VcRedist -Path D:\Temp\VcRedist
+          $VcList = Get-VcList | Get-VcRedist -Path "D:/"
+          $VcList | Install-VcRedist -Path D:/
