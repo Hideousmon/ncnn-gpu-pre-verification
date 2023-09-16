@@ -100,7 +100,7 @@ jobs:
 
       - id: verify-vulkan
         if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-            (matrix.os == 'macos-latest' && matrix.arch == 'x86_64') 
+            (matrix.os == 'macos-latest') 
         name: verify vulkan sdk install for windows amd64 and macos
         shell: bash
         run: |
