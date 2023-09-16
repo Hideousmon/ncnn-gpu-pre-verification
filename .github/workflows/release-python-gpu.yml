@@ -230,8 +230,8 @@ jobs:
                             mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
                             "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
-          CIBW_BEFORE_BUILD: pip install delvewheel -
-          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} -add-path "c:/Windows/System32/" 
+          CIBW_BEFORE_BUILD: pip install delvewheel 
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} --add-path "c:/Windows/System32/" 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
