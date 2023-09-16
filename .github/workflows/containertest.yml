@@ -12,4 +12,6 @@ jobs:
         shell: powershell
         run: |
           Install-Module -Name "VcRedist" -Force
-          Install-VcRedist
+          Import-Module VcRedist
+          $VcList = Get-VcList | Get-VcRedist -Path "D:\Temp\VcRedist"
+          $VcList | Install-VcRedist -Path D:\Temp\VcRedist
