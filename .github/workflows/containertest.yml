@@ -1,7 +1,7 @@
 name: windows test
 on:
   push:
-    branches: [master]
+    branches: [main]
 
 jobs:
   windows-build:
@@ -15,3 +15,4 @@ jobs:
           Import-Module VcRedist
           $VcList = Get-VcList | Get-VcRedist -Path "D:/"
           $VcList | Install-VcRedist -Path D:/
+          Import-VcCmApp
