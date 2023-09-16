@@ -8,6 +8,11 @@ jobs:
     name: Build
     runs-on: windows-2019
     steps:
+      - name: find mscvp
+        shell: bash
+        run: |
+          ls -l c:\Windows\System32\  | grep 'mscvp*'
+
       - name: vc redist
         shell: powershell
         run: |
@@ -15,4 +20,9 @@ jobs:
           Import-Module VcRedist
           $VcList = Get-VcList | Get-VcRedist -Path "D:/"
           $VcList | Install-VcRedist -Path D:/
-          Import-VcCmApp
+
+      - name: find mscvp
+        shell: bash
+        run: |
+          ls -l c:\Windows\System32\  | grep 'mscvp*'
+          
