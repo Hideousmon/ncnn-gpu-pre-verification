@@ -49,7 +49,7 @@ make -j$(nproc) && cd Vulkan-Headers && ln -s ../loader lib
 
 
 
-发现一个Bug，之前纯cpu版本的macos arm64 及 universal2 的实际xcode编译目标平台是x86_64，所以加上arm64 vulkan之后一直在报错。
+发现一个cibuildwheel的Bug，之前纯cpu版本的macos arm64 及 universal2 的实际xcode编译目标平台依旧是x86_64，导致加上arm64 vulkan之后一直在报错。
 
 #### c. Universal2架构-MacOS
 
