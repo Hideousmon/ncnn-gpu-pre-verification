@@ -1,75 +1,12 @@
-### 1. 部分平台架构无法顺利编译带Vulkan版本，问题记录(20230915)
+### 1. 部分平台架构无法顺利编译带Vulkan版本，问题记录(20230917)
 
-#### a. ARM64架构-Windows
+#### a. arm64 universal2-MacOS问题修复 
 
-> 【使用Vulkan-Loader】报错位置：repair built wheel过程
->
-> 报错：FileNotFoundError: Unable to find library: msvcp140.dll
-
-CIBW_BEFORE_ALL:
-
-```
-git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-cd Vulkan-Loader && mkdir build && cd build &&
-python3 ../scripts/update_deps.py --dir ../external --config debug &&
-cmake -C ../external/helper.cmake -G "Visual Studio 17 2022" -A ARM64 -DCMAKE_BUILD_TYPE=Debug -DUSE_MASM=OFF ..  && cmake --build . &&
-mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib" "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
-```
-
-问题思考：
-
-根据cibuildwheel的工作方式描述[cibuildwheel/docs/data/how-it-works.png at main · pypa/cibuildwheel (github.com)](https://github.com/pypa/cibuildwheel/blob/main/docs/data/how-it-works.png) ，Linux系统会创建容器，并在容器中进行编译；而Windows与MacOS则只在x86_64架构上进行交叉编译。
-
-Visual C++ Redistributables 在Github Actions的runner中应该是齐全的([runner-images/images/win/Windows2019-Readme](https://github.com/actions/runner-images/blob/main/images/win/Windows2019-Readme.md))，且应该不有路径缺失的问题，可能还是交叉编译或修复工具有些问题。
-
-#### b. ARM64架构-MacOS
-
-> 【使用VULKAN_SDK】报错位置：repair built wheel过程
->
-> 报错：Required arch arm64 missing from ncnn/ncnn.cpython-38-darwin.so
->
-> [ncnn-vulkan对此架构没有进行repair的过程，故其实生成的wheel可能存在问题]
->
-> 【使用Vulkan-Loader】报错位置：编译wheel过程
->
-> 报错：ld: can't map file, errno=22 file '/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers/lib/vulkan.framework' for architecture x86_64
-
-CIBW_BEFORE_ALL:
-
-```
-git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
-cd Vulkan-Loader && mkdir build && cd build &&
-../scripts/update_deps.py && cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64 -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
-make -j$(nproc) && cd Vulkan-Headers && ln -s ../loader lib 
-```
-
-问题思考：
-
-交叉编译或修复工具还存在问题，但修不通。
+发现一个cibuildwheel的Bug，之前纯cpu版本的macos arm64 及 universal2 的实际xcode编译目标平台依旧是x86_64，导致加上arm64 vulkan之后一直在报错。现在按照与macos-arm64-gpu.yml一致的流程编译ncnn后即可正常工作。
+#### b. arm64-Windows问题隐患
 
 
 
-发现一个cibuildwheel的Bug，之前纯cpu版本的macos arm64 及 universal2 的实际xcode编译目标平台依旧是x86_64，导致加上arm64 vulkan之后一直在报错。
-
-#### c. Universal2架构-MacOS
-
-> 【使用VULKAN_SDK】报错位置：repair built wheel过程
->
-> 报错：Required arch arm64 missing from ncnn/ncnn.cpython-38-darwin.so
->
-> [ncnn-vulkan对此架构没有进行repair的过程，故其实生成的wheel可能存在问题]
->
-> 【使用Vulkan-Loader】报错位置：编译wheel过程
->
-> 报错：ld: can't map file, errno=22 file '/Users/runner/work/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/Vulkan-Headers/lib/vulkan.framework' for architecture x86_64
-
-问题思考：
-
-同ARM64架构-MacOS。
-
-#### d. 对上述架构暂时保持cpu版本
-
-或者取消掉repair过程，可以完成编译，但是如果缺库导致没法正常工作好像不太好。
 
 ### 2. Forked ncnn 编译全部wheels最新验证(20230914) √
 
