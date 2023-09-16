@@ -62,8 +62,8 @@ jobs:
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
           # - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
-          # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
-          # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
+          - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
+          - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
           - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
           - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
@@ -84,14 +84,8 @@ jobs:
         with:
           python-version: '3.x'
 
-      - name: brew uninstall libomp for macos
-        if: matrix.os == 'macos-latest'
-        run: |
-          brew uninstall --ignore-dependencies libomp
-
-      - name: prepare vulkan sdk for windows amd64 and macos
-        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-            (matrix.os == 'macos-latest' )
+      - name: prepare vulkan sdk for windows amd64 
+        if: matrix.os == 'windows-2019' && matrix.arch == 'AMD64'
         uses: humbletim/setup-vulkan-sdk@v1.2.0
         with:
           vulkan-query-version: latest
@@ -99,8 +93,7 @@ jobs:
           vulkan-use-cache: true
 
       - id: verify-vulkan
-        if: (matrix.os == 'windows-2019' && matrix.arch == 'AMD64') || 
-            (matrix.os == 'macos-latest') 
+        if: matrix.os == 'windows-2019' && matrix.arch == 'AMD64'
         name: verify vulkan sdk install for windows amd64 and macos
         shell: bash
         run: |
@@ -116,7 +109,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers 
                             LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader 
           CIBW_BEFORE_ALL: yum -y install libXrandr-devel &&
                            git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
@@ -139,7 +132,7 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON VULKAN_SDK=/project/Vulkan-Loader/build/Vulkan-Headers LD_LIBRARY_PATH=/project/Vulkan-Loader/build/loader
           CIBW_BEFORE_ALL: apk add libxrandr-dev && 
                            git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
@@ -161,12 +154,82 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
           CIBW_BEFORE_BUILD: pip install delvewheel
           CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel}
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
+      
+
+      ###### prepare for macOs
+      - name: cache-openmp for macos
+        if: matrix.os == 'macos-latest'
+        id: cache-openmp
+        uses: actions/cache@v3
+        with:
+          path: openmp-install
+          key: openmp-macos-install-20230504
+
+      - name: openmp for macos
+        if: matrix.os == 'macos-latest' && steps.cache-openmp.outputs.cache-hit != 'true'
+        run: |
+          wget https://github.com/llvm/llvm-project/releases/download/llvmorg-11.0.0/openmp-11.0.0.src.tar.xz
+          tar -xf openmp-11.0.0.src.tar.xz
+          cd openmp-11.0.0.src
+          sed -i'' -e '/.size __kmp_unnamed_critical_addr/d' runtime/src/z_Linux_asm.S
+          sed -i'' -e 's/__kmp_unnamed_critical_addr/___kmp_unnamed_critical_addr/g' runtime/src/z_Linux_asm.S
+      
+      - name: openmp-build-x86_64 for macos
+        if: matrix.os == 'macos-latest' && steps.cache-openmp.outputs.cache-hit != 'true'
+        run: |
+          cd openmp-11.0.0.src
+          mkdir -p build-x86_64 && cd build-x86_64
+          cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake -DPLATFORM=MAC -DARCHS="x86_64" \
+              -DDEPLOYMENT_TARGET=$MAC_DEPLOYMENT_TARGET -DENABLE_BITCODE=$ENABLE_BITCODE -DENABLE_ARC=$ENABLE_ARC -DENABLE_VISIBILITY=$ENABLE_VISIBILITY \
+              -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+              -DPERL_EXECUTABLE=/usr/local/bin/perl \
+              -DLIBOMP_ENABLE_SHARED=OFF -DLIBOMP_OMPT_SUPPORT=OFF -DLIBOMP_USE_HWLOC=OFF ..
+          cmake --build . -j 3
+          cmake --build . --target install
+
+      - name: openmp-build-arm64 for macos
+        if: matrix.os == 'macos-latest' && steps.cache-openmp.outputs.cache-hit != 'true'
+        run: |
+          cd openmp-11.0.0.src
+          mkdir -p build-arm64 && cd build-arm64
+          cmake -DCMAKE_TOOLCHAIN_FILE=../../toolchains/ios.toolchain.cmake -DPLATFORM=MAC_ARM64 -DARCHS="arm64" \
+              -DDEPLOYMENT_TARGET=$MAC_ARM64_DEPLOYMENT_TARGET -DENABLE_BITCODE=$ENABLE_BITCODE -DENABLE_ARC=$ENABLE_ARC -DENABLE_VISIBILITY=$ENABLE_VISIBILITY \
+              -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=install \
+              -DPERL_EXECUTABLE=/usr/local/bin/perl \
+              -DLIBOMP_ENABLE_SHARED=OFF -DLIBOMP_OMPT_SUPPORT=OFF -DLIBOMP_USE_HWLOC=OFF ..
+          cmake --build . -j 3
+          cmake --build . --target install
+
+      - name: openmp-merge-fat-library for macos
+        if: matrix.os == 'macos-latest' && steps.cache-openmp.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p $GITHUB_WORKSPACE/openmp-install
+          cp -a openmp-11.0.0.src/build-x86_64/install/include $GITHUB_WORKSPACE/openmp-install
+          mkdir -p $GITHUB_WORKSPACE/openmp-install/lib
+          lipo -create \
+              openmp-11.0.0.src/build-x86_64/install/lib/libomp.a \
+              openmp-11.0.0.src/build-arm64/install/lib/libomp.a \
+              -o $GITHUB_WORKSPACE/openmp-install/lib/libomp.a
+
+      - name: install-openmp for macos
+        if: matrix.os == 'macos-latest'
+        run: |
+          sudo cp $GITHUB_WORKSPACE/openmp-install/include/* $DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include
+          sudo cp $GITHUB_WORKSPACE/openmp-install/lib/libomp.a $DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib
+
+      - name: vulkansdk for macos
+        if: matrix.os == 'macos-latest'
+        run: |
+          wget https://sdk.lunarg.com/sdk/download/1.3.236.0/mac/vulkansdk-macos-1.3.236.0.dmg?Human=true -O vulkansdk-macos-1.3.236.0.dmg
+          hdiutil attach vulkansdk-macos-1.3.236.0.dmg
+          sudo /Volumes/vulkansdk-macos-1.3.236.0/InstallVulkan.app/Contents/MacOS/InstallVulkan --root $GITHUB_WORKSPACE/vulkansdk-macos-1.3.236.0 --accept-licenses --default-answer --confirm-command install
+          hdiutil detach /Volumes/vulkansdk-macos-1.3.236.0
 
       - name: Build wheels for macos x86_64
         if: matrix.os == 'macos-latest' && matrix.arch == 'x86_64'
@@ -177,7 +240,12 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON VULKAN_SDK=$GITHUB_WORKSPACE/vulkansdk-macos-1.3.236.0/macOS
+            CMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/toolchains/ios.toolchain.cmake PLATFORM=MAC ARCHS="x86_64"
+            DEPLOYMENT_TARGET="10.9" ENABLE_BITCODE=OFF ENABLE_ARC=OFF ENABLE_VISIBILITY=OFF
+            OpenMP_C_FLAGS="-Xclang -fopenmp" OpenMP_CXX_FLAGS="-Xclang -fopenmp"
+            OpenMP_C_LIB_NAMES="libomp" OpenMP_CXX_LIB_NAMES="libomp"
+            OpenMP_libomp_LIBRARY="$DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libomp.a"
         with:
           package-dir: ncnn-python-gpu
           output-dir: wheelhouse
@@ -193,7 +261,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT_WINDOWS: >
                             PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
-                            CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON 
                             VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
@@ -220,7 +288,7 @@ jobs:
           CIBW_BUILD_VERBOSITY: 1
           CIBW_ENVIRONMENT_WINDOWS: >
                             PATH="D:\\a\\ncnn-gpu-pre-verification\\ncnn-gpu-pre-verification\\Vulkan-Loader\\build\\loader\\Debug;$PATH"
-                            CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE 
+                            CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON 
                             VULKAN_SDK=D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers
           CIBW_BEFORE_ALL:  git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                             cd Vulkan-Loader && mkdir build && cd build &&
@@ -247,9 +315,14 @@ jobs:
           CIBW_ARCHS_WINDOWS: ${{ matrix.arch }}
           CIBW_BUILD: ${{ matrix.build }}
           CIBW_BUILD_VERBOSITY: 1
-          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=TRUE VULKAN_SDK=${{steps.verify-vulkan.outputs.VULKAN_SDK}}
-                            Vulkan_INCLUDE_DIR=${{steps.verify-vulkan.outputs.VULKAN_SDK}}/macos/MoltenVK/include
-                            Vulkan_LIBRARY=${{steps.verify-vulkan.outputs.VULKAN_SDK}}/macos/MoltenVK/dylib/macOS/libMoltenVK.dylib
+          CIBW_ENVIRONMENT: CMAKE_BUILD_PARALLEL_LEVEL=2 NCNN_VULKAN=ON VULKAN_SDK=$GITHUB_WORKSPACE/vulkansdk-macos-1.3.236.0/macOS
+            CMAKE_TOOLCHAIN_FILE=$GITHUB_WORKSPACE/toolchains/ios.toolchain.cmake PLATFORM=MAC_ARM64 ARCHS="arm64"
+            DEPLOYMENT_TARGET="11.0" ENABLE_BITCODE=OFF ENABLE_ARC=OFF ENABLE_VISIBILITY=OFF
+            OpenMP_C_FLAGS="-Xclang -fopenmp" OpenMP_CXX_FLAGS="-Xclang -fopenmp"
+            OpenMP_C_LIB_NAMES="libomp" OpenMP_CXX_LIB_NAMES="libomp"
+            OpenMP_libomp_LIBRARY="$DEVELOPER_DIR/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libomp.a"
+            Vulkan_INCLUDE_DIR=$GITHUB_WORKSPACE/vulkansdk-macos-1.3.236.0/MoltenVK/include
+            Vulkan_LIBRARY=$GITHUB_WORKSPACE/vulkansdk-macos-1.3.236.0/MoltenVK/dylib/macOS/libMoltenVK.dylib
           # CIBW_REPAIR_WHEEL_COMMAND: delocate-wheel -w {dest_dir} -v {wheel}
         with:
           package-dir: ncnn-python-gpu
