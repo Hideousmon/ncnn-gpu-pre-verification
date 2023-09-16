@@ -61,11 +61,11 @@ jobs:
           # - { os: windows-2019, arch: x86,        build: 'cp*'            } 
           # - { os: windows-2019, arch: AMD64,      build: 'cp*'            }
           # - { os: windows-2019, arch: AMD64,      build: 'pp*'            }
-          - { os: windows-latest, arch: ARM64,      build: 'cp*'            } 
+          - { os: windows-2019, arch: ARM64,      build: 'cp*'            } 
           # - { os: macos-latest, arch: x86_64,     build: 'cp*'            }
           # - { os: macos-latest, arch: x86_64,     build: 'pp*'            }
-          - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
-          - { os: macos-latest, arch: universal2, build: 'cp*'            } 
+          # - { os: macos-latest, arch: arm64,      build: 'cp*'            } 
+          # - { os: macos-latest, arch: universal2, build: 'cp*'            } 
 
     steps:
       - uses: actions/checkout@v3
@@ -210,7 +210,7 @@ jobs:
           output-dir: wheelhouse
 
       - name: Build wheels for windows ARM64
-        if: matrix.os == 'windows-latest' && matrix.arch == 'ARM64'
+        if: matrix.os == 'windows-2019' && matrix.arch == 'ARM64'
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -225,13 +225,13 @@ jobs:
           CIBW_BEFORE_ALL:  git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                             cd Vulkan-Loader && mkdir build && cd build &&
                             python3 ../scripts/update_deps.py --dir ../external --config debug &&
-                            cmake -C ../external/helper.cmake -G "Visual Studio 17 2022" -A ARM64 -DCMAKE_BUILD_TYPE=Debug -DUSE_MASM=OFF ..  &&
+                            cmake -C ../external/helper.cmake -G "Visual Studio 16 2019" -A ARM64 -DCMAKE_BUILD_TYPE=Debug -DUSE_MASM=OFF ..  &&
                             cmake --build . &&
                             mklink /d "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/external/Vulkan-Headers/build/install/lib"
                             "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
           CIBW_BEFORE_BUILD: pip install delvewheel 
-          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} --ignore-in-wheel
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} --no-dll "msvcp140.dll" 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
