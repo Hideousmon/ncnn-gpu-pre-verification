@@ -231,7 +231,7 @@ jobs:
                             "D:/a/ncnn-gpu-pre-verification/ncnn-gpu-pre-verification/Vulkan-Loader/build/loader/Debug"
 
           CIBW_BEFORE_BUILD: pip install delvewheel 
-          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} --no-dll "msvcp140.dll" 
+          CIBW_REPAIR_WHEEL_COMMAND: delvewheel repair -w {dest_dir} {wheel} --no-dll "msvcp140.dll;vcomp140.dll" 
         with:
           package-dir: ./ncnn-python-gpu
           output-dir: wheelhouse
