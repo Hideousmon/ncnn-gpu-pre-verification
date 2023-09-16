@@ -252,7 +252,6 @@ jobs:
       - name: Build wheels for macos test
         if: (matrix.os == 'macos-latest' && matrix.arch == 'arm64') || 
             (matrix.os == 'macos-latest' && matrix.arch == 'universal2')
-
         uses: pypa/cibuildwheel@v2.15.0
         env:
           CIBW_ARCHS_MACOS: ${{ matrix.arch }}
@@ -266,12 +265,12 @@ jobs:
           CIBW_BEFORE_ALL: git clone https://github.com/KhronosGroup/Vulkan-Loader.git &&
                            cd Vulkan-Loader && mkdir build && cd build &&
                            ../scripts/update_deps.py &&
-                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR=arm64 -DCMAKE_OSX_ARCHITECTURES=arm64 -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
+                           cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_SYSTEM_PROCESSOR="x86_64;arm64" -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" -DVULKAN_HEADERS_INSTALL_DIR=$(pwd)/Vulkan-Headers/build/install .. &&
                            make -j$(nproc) &&
                            cd Vulkan-Headers &&
                            ln -s ../loader lib 
         with:
-          package-dir: ./ncnn-python-gpu
+          package-dir: ncnn-python-gpu
           output-dir: wheelhouse
 
       # - name: Build wheels for x86 windows arm64 windows arm64 macos universal2 macos(cpu only)
