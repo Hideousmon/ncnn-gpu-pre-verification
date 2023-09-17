@@ -10,7 +10,7 @@ arm64 vulkan + arm64 ncnn 编译完成后，使用delvewheel进行wheel修复时
 
 ### 2. Forked ncnn 编译全部wheels最新验证(20230917) √
 
-可见[release test · Hideousmon/ncnn@efdcfe7 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6207927363)。
+可见[release test · Hideousmon/ncnn@d12c984 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6211745770)。
 
 ### 3. libvulkan库无法找到时是否可用的验证(20230917) √
 
@@ -26,7 +26,7 @@ arm64 vulkan + arm64 ncnn 编译完成后，使用delvewheel进行wheel修复时
 
 验证结果：
 
-在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，最新的结果(20230917)可见[upload wheels · Hideousmon/ncnn-gpu-pre-verification@a11c788 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6210997627/job/16859757387)。
+在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，最新的结果(20230917)可见[update wheels · Hideousmon/ncnn-gpu-pre-verification@cde34d9 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6212630410)。
 
 ### 4. Windows系统cibuildwheel无默认repair wheel过程问题修复(20230910)  √
 
