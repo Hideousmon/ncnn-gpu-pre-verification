@@ -1,18 +1,18 @@
 ### 1. 部分平台架构无法顺利编译带Vulkan版本，问题记录(20230917)
 
-#### a. arm64 universal2-MacOS问题修复 
+#### a. arm64 universal2-MacOS 问题修复 √
 
 发现一个cibuildwheel的Bug，之前纯cpu版本的macos arm64 及 universal2 的实际xcode编译目标平台依旧是x86_64，导致加上arm64 vulkan之后一直在报错。现在按照与macos-arm64-gpu.yml一致的流程编译ncnn后即可正常工作。
-#### b. arm64-Windows问题隐患
+#### b. arm64-Windows 问题隐患
+
+arm64 vulkan + arm64 ncnn 编译完成后，使用delvewheel进行wheel修复时，始终无法找到msvcp140.dll及vcomp140.dll，但是查看c:/Windows/System32/可以找到，重新安装Visual C++ Redistributable后依旧出现此问题，当前做法为修复wheel时放弃寻找msvcp140.dll及vcomp140.dll。所以当用户的机器缺失msvcp140.dll及vcomp140.dll时可能会导致vulkan功能无法使用。
 
 
+### 2. Forked ncnn 编译全部wheels最新验证(20230917) √
 
+可见[release test · Hideousmon/ncnn@efdcfe7 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6207927363)。
 
-### 2. Forked ncnn 编译全部wheels最新验证(20230914) √
-
-可见[release test · Hideousmon/ncnn@43df385 (github.com)](https://github.com/Hideousmon/ncnn/actions/runs/6182483110)。
-
-### 3. libvulkan库无法找到时是否可用的验证(20230914) √
+### 3. libvulkan库无法找到时是否可用的验证(20230917) √
 
 > libvulkan库无法找到时依然可用的依据：
 >
@@ -26,9 +26,7 @@
 
 验证结果：
 
-在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，最新的结果(20230914)可见[update wheels · Hideousmon/ncnn-gpu-pre-verification@b5dbf58 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6184598973/job/16788555563)
-
-
+在成功删除了'/usr/lib/x86_64-linux-gnu/libvulkan.so.1'及 '/usr/lib/x86_64-linux-gnu/libvulkan.so.1.2.131'的ubuntu系统上依旧可以正常使用。在初始不携带libvulkan的windows、macos系统上也可以正常使用，最新的结果(20230917)可见[update wheels · Hideousmon/ncnn-gpu-pre-verification@b5dbf58 (github.com)](https://github.com/Hideousmon/ncnn-gpu-pre-verification/actions/runs/6184598973/job/16788555563)
 
 ### 4. Windows系统cibuildwheel无默认repair wheel过程问题修复(20230910)  √
 

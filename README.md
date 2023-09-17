@@ -10,9 +10,9 @@
 | ubuntu (cp-musllinux) |   √    |  √   |  -   |   -   |   -   |     -      | √ | √ | √ |
 |      ubuntu (pp)      |   √    |  √   |  -   |   -   |   -   |     -      | √ | - | - |
 |     windows (pp)      |   -    |  -   |  -   |   √   |   -   |     -      | - | - | - |
-|     windows (cp)      |   -    |  -   | √ |   √   |  cpu  |     -      | - | - | - |
+|     windows (cp)      |   -    |  -   | √ |   √   |  √  |     -      | - | - | - |
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      | - | - | - |
-|      macos (cp)       |   √    |  -   |  -   |   -   |  cpu  |    cpu     | - | - | - |
+|      macos (cp)       |   √    |  -   |  -   |   -   |  √  |    √    | - | - | - |
 
 ### trouble shooting
 
@@ -30,11 +30,3 @@ can be found [here](https://github.com/Hideousmon/ncnn-gpu-pre-verification/blob
 | :----: | :--------: | :--------------: |
 |  C++   |  49.24ms   |     13.14ms      |
 | Python |  56.62ms   |     14.61ms      |
-
-### TO DO
-
-- [ ] ~~build wheels on i686, x86, arm64, universal2 with vulkan~~.
-- [x] record the issues on x86, arm64, universal2.
-- [x] pytest without libvulkan.
-- [x] build wheels for i686, aarch64, ppc64le, s390x and musllinux.
-- [x] pull request to ncnn.
