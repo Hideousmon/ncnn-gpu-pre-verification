@@ -14,6 +14,8 @@
 |      macos (pp)       |   √    |  -   |  -   |   -   |   -   |     -      | - | - | - |
 |      macos (cp)       |   √    |  -   |  -   |   -   |  √  |    √    | - | - | - |
 
+wheels can be found at [built-wheels](https://github.com/Hideousmon/ncnn-gpu-pre-verification/tree/main/built-wheels) for temporary use.
+
 ### trouble shooting
 
 can be found [here](https://github.com/Hideousmon/ncnn-gpu-pre-verification/blob/main/troubleshooting.md). [in Chinese]
