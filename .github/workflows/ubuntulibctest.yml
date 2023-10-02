@@ -1,0 +1,27 @@
+name: libc++ test
+on:
+  push:
+    branches: [main]
+
+jobs:
+  windows-build:
+    name: Build
+    runs-on: ubuntu-20.04
+    steps:
+      - name: find libc++
+        shell: bash
+        run: |
+          find / -name libstdc++.so.6*
+
+      # - name: vc redist
+      #   shell: powershell
+      #   run: |
+      #     Install-Module -Name "VcRedist" -Force
+      #     Import-Module VcRedist
+      #     $VcList = Get-VcList | Get-VcRedist -Path "D:/"
+      #     $VcList | Install-VcRedist -Path D:/
+
+      # - name: find mscvp
+      #   shell: bash
+      #   run: |
+      #     ls -lh "c:/Windows/System32/" 
